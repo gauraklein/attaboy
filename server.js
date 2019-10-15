@@ -43,7 +43,7 @@ app.post('/newpost', function(req, res) {
         res.status(500).send('you did not submit a post')
       })
     
-    
+
 })
 
 app.get('/newpost', function(req, res) {
