@@ -8,9 +8,14 @@ exports.seed = function(knex) {
       return knex
         .select("*")
         .from("attagories")
-        .del()
+        .del();
     })
-  .then(() => {return knex.select('*').from('posts').del()});
+    .then(() => {
+      return knex
+        .select("*")
+        .from("posts")
+        .del();
+    });
   // .then(() => {return knex.select('*').from('Commits').del()})
   // .then(() => {return knex.select('*').from('Users').del()})
   // .then(() => {return knex.select('*').from('Students').del()})

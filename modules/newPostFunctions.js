@@ -1,4 +1,5 @@
 const { db } = require("./db/dbConnection");
+
 let postID = 20 /// deals with id not incrementing issue
 function newPostToDB (post) {
     postID++

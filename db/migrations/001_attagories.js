@@ -2,6 +2,7 @@ exports.up = function(knex) {
     return knex.schema.createTable("attagories", table => {
       table.increments("id");
       table.string("attagory_name");
+      table.string("attagory_description", 10000)
       table.integer("created_by");
       table.foreign("created_by").references("users.id");
       table.integer("total_subscriptions");
