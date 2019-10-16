@@ -9,6 +9,8 @@ exports.up = function(knex) {
     table.foreign("post_id").references("posts.id");
     table.integer("comment_reference");
     table.foreign("comment_reference").references("comments.id");
+    table.integer("attagory_id");
+    table.foreign("attagory_id").references("attagories.id")
     table.integer("comment_attaboys");
     table.integer("total_comments");
     table.string("slug");

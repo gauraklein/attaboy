@@ -60,7 +60,7 @@ app.get('/viewpost/:slug', function(req, res) {
     // res.send(viewPostTemplate)
     .then(function (post) {
     console.log('this is the request slug',req.params.slug)
-        console.log(post.rows[0].title)
+        console.log(post)
         res.send(renderPost(post.rows[0]))
       })
       .catch(function (err) {
@@ -134,3 +134,13 @@ function ensureAuth(req, res, next) {
   console.log('ensureAuth failed! ')
   res.redirect('/auth')
 }
+
+//--------------------------------------\\
+//           ATTAGORY ROUTES            \\
+//--------------------------------------\\
+
+// add new Attagory
+
+app.get('/attagories/addNew', function (req, res) {
+  
+})

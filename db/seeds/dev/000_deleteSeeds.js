@@ -7,10 +7,10 @@ exports.seed = function(knex) {
     .then(() => {
       return knex
         .select("*")
-        .from("users")
-        .del();
-    });
-  // .then(() => {return knex.select('*').from('Touchpoints').del()})
+        .from("attagories")
+        .del()
+    })
+  .then(() => {return knex.select('*').from('posts').del()});
   // .then(() => {return knex.select('*').from('Commits').del()})
   // .then(() => {return knex.select('*').from('Users').del()})
   // .then(() => {return knex.select('*').from('Students').del()})
