@@ -61,7 +61,7 @@ function newPostToDB (post) {
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-app.get('/:slug', function(req, res) {
+app.get('/viewpost/:slug', function(req, res) {
     viewIndividualPost(req.params.slug)
     // res.send(viewPostTemplate)
     .then(function (post) {
@@ -99,7 +99,9 @@ function renderPost (postFromDb) {
   } 
 
 
-//Authentication
+//--------------------------------------\\
+//            Authentication            \\
+//--------------------------------------\\
 const passport = require('passport');
 app.use(passport.initialize());
 app.use(passport.session());
