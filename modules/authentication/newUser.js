@@ -7,14 +7,15 @@ FROM users
 `;
 
 function addUser(newUser) {
-  let id = 21;
+  console.log(newUser)
+  // let id = ;
   let username = newUser.username;
-  let password = newUser.username;
-  let email = newUser.username;
-  let slug = id;
+  let password = newUser.password;
+  let email = newUser.email;
+  let slug = uuidv1();
   return db.raw(
-    "INSERT INTO users (id, username, password, email, slug) VALUES (?, ?, ?, ?, ?)",
-    [id, username, password, email, slug]
+    "INSERT INTO users (username, password, email, slug) VALUES (?, ?, ?, ?)",
+    [username, password, email, slug]
   );
 }
 

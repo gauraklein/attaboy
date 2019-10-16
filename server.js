@@ -33,6 +33,7 @@ app.listen(port, () => {
 
 let postID = 21; //var to make sure that the post id is correct
 app.post("/newpost", ensureAuth, function(req, res) {
+  console.log(req)
   newPostToDB(req.body) //adds post
     .then(function() {
       postID++; //increments id
@@ -104,7 +105,7 @@ function prettyPrintJSON(x) {
 //            NEW USER ROUTES           \\
 //--------------------------------------\\
 
-app.post("/newUser", (req, res, nextFn) => {
+app.post("/sign-up", (req, res, nextFn) => {
   addUser(req.body)
     .then(() => {
       res.send("Added user successfully");
@@ -115,7 +116,7 @@ app.post("/newUser", (req, res, nextFn) => {
     });
 });
 
-app.get("/newUser", (req, res) =>
+app.get("/sign-up", (req, res) =>
   res.sendFile("newUser.html", { root: __dirname })
 );
 
@@ -183,7 +184,6 @@ function ensureAuth(req, res, next) {
     console.log("user -", req.user);
     return next();
   }
-
   console.log("ensureAuth failed! ");
   res.redirect("/auth");
 }
