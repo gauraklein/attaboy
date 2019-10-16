@@ -14,6 +14,7 @@ app.use(express.static("public"));
 //Modules
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
+const { addUser } = require('./modules/authentication/newUser.js')
 
 //Templating
 
@@ -28,7 +29,7 @@ app.listen(port, () => {
 //--------------------------------------\\
 
 let postID = 21 //var to make sure that the post id is correct
-app.post('/newpost', function(req, res) {
+app.post('/newpost', ensureAuth, function(req, res) {
     newPostToDB(req.body) //adds post
     .then(function () {
         postID++ //increments id
@@ -42,7 +43,7 @@ app.post('/newpost', function(req, res) {
 
 })
 
-app.get('/newpost', function(req, res) {
+app.get('/newpost', ensureAuth, function(req, res) {
     res.send(mustache.render(newPostPage)) //has the submit form
 })
 
@@ -60,7 +61,7 @@ function newPostToDB (post) {
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-app.get('/viewpost/:slug', function(req, res) {
+app.get('/viewpost/:slug', ensureAuth, function(req, res) {
     viewIndividualPost(req.params.slug)
     // res.send(viewPostTemplate)
     .then(function (post) {
@@ -96,6 +97,25 @@ function renderPost (postFromDb) {
   function prettyPrintJSON (x) {
     return JSON.stringify(x, null, 2)
   } 
+  
+//--------------------------------------\\
+//            NEW USER ROUTES           \\
+//--------------------------------------\\
+
+app.post('/newUser', (req, res, nextFn) => {
+  addUser(req.body)
+  .then(() => {
+    res.send('Added user successfully')
+  })
+  .catch((err) => {
+    res.status(500).send('this is the error' + err)
+    console.err(err)
+  })
+});
+
+
+
+app.get('/newUser', (req, res) => res.sendFile('newUser.html', { root : __dirname}));
 
 
 //--------------------------------------\\
@@ -106,10 +126,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 const LocalStrategy = require('passport-local').Strategy;
 
-passport.use(new LocalStrategy((email, password, done) => {
+passport.use(new LocalStrategy((username, password, done) => {
   console.log('got auth request') 
   db('users')
-  .where({email: email})
+  .where({username: username})
   .then((userRows) => {
     let user = userRows[0]
     if (!user) {
@@ -135,10 +155,11 @@ app.post('/auth',
   passport.authenticate('local', { failureRedirect: '/error' }),
   function(req, res) {
     req.session.passport
-    res.redirect('/success?email='+req.user.email);
+    res.redirect('/success?email='+req.user.username);
   }
   );
-
+  // res.redirect('/success?email='+req.user.username);
+  
 app.get('/success', (req, res) => res.send("Welcome "+req.query.email+"!!"));
 app.get('/error', (req, res) => res.send("error logging in"));
 
@@ -146,7 +167,8 @@ passport.serializeUser(function(user, cb) {
   console.log("seiralize user -", user.id)
 
   cb(null, user.id);
-});
+}); 
+
 
 passport.deserializeUser(function(id, cb) {
   User.findById(id, function(err, user) {
