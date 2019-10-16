@@ -17,7 +17,6 @@ const mustache = require("mustache");
 
 //Templating
 
-
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
 const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
 
