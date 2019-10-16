@@ -1,6 +1,6 @@
-const log = require('../logging.js');
-const dbConfigs = require('../../knexfile.js');
-const db = require('knex')(dbConfigs.development);
+const log = require("../logging.js");
+const dbConfigs = require("../../knexfile.js");
+const db = require("knex")(dbConfigs.development);
 
 // db.raw('SELECT 1')
 // .then((result) => {
@@ -9,10 +9,7 @@ const db = require('knex')(dbConfigs.development);
 //     .catch(err) => {
 //         log.error("Failed to connect to the database.")
 //     }
-    
 
 module.exports = {
-    db: db
-}
-
-  
+  db: db
+};
