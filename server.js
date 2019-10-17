@@ -17,7 +17,6 @@ const mustache = require("mustache");
 const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
-
 //Templating
 
 const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
@@ -37,22 +36,30 @@ app.listen(port, () => {
 
 //try passport.authentication() below
 
-app.post("/newpost", function(req, res) {
-  console.log(req.body)
-  console.log("new post user - " + req.user)
-  console.log("new post user - " + req.user)
-  newPostToDB(req.body) //adds post
-    .then(function() {
-      // postID++; //increments id //commenting out to test emty table
-      res.send(
-        `<h1>You submitted a post! Click <a href="/newpost">here</a> to submit another!</h1>`
-      );
-    })
-    .catch(function(err) {
-      console.error(err);
-      res.status(500).send("you did not submit a post");
-    });
-});
+// console.log(req.body)
+// console.log("new post user - " + req.user)
+// console.log("new post user - " + req.user)
+
+app.post(
+  "/newpost",
+  function(req, res) {
+    ensureAuth(req, res);
+    next();
+  },
+  function(req, res, next) {
+    newPostToDB(req.body) //adds post
+      .then(function() {
+        // postID++; //increments id //commenting out to test emty table
+        res.send(
+          `<h1>You submitted a post! Click <a href="/newpost">here</a> to submit another!</h1>`
+        );
+      })
+      .catch(function(err) {
+        console.error(err);
+        res.status(500).send("you did not submit a post");
+      });
+  }
+);
 
 app.get("/newpost", ensureAuth, function(req, res) {
   res.send(mustache.render(newPostPage)); //has the submit form
@@ -63,11 +70,12 @@ app.get("/newpost", ensureAuth, function(req, res) {
 //--------------------------------------\\
 
 function newPostToDB(post) {
-  slug = uuidv1()
-  return db.raw(
-    "INSERT INTO posts (title, content, slug) VALUES (?, ?, ?)",
-    [post.title, post.content, slug]
-  );
+  slug = uuidv1();
+  return db.raw("INSERT INTO posts (title, content, slug) VALUES (?, ?, ?)", [
+    post.title,
+    post.content,
+    slug
+  ]);
 }
 
 //--------------------------------------\\
@@ -188,6 +196,7 @@ passport.deserializeUser(function(id, cb) {
 });
 
 function ensureAuth(req, res, next) {
+  console.log(req)
   if (passport.authenticate("local")) {
     console.log("ensureAuth - user -", req.user);
     return next();
