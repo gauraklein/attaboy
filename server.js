@@ -15,6 +15,8 @@ app.use(express.static("public"));
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
 const { addUser } = require("./modules/authentication/newUser.js");
+const uuidv1 = require("uuidv1");
+
 
 //Templating
 
@@ -31,12 +33,17 @@ app.listen(port, () => {
 //           NEW POST ROUTES            \\
 //--------------------------------------\\
 
-let postID = 21; //var to make sure that the post id is correct
-app.post("/newpost", ensureAuth, function(req, res) {
-  console.log(req)
+// let postID = 21; //var to make sure that the post id is correct // checking new post with emtpy table
+
+//try passport.authentication() below
+
+app.post("/newpost", function(req, res) {
+  console.log(req.body)
+  console.log("new post user - " + req.user)
+  console.log("new post user - " + req.user)
   newPostToDB(req.body) //adds post
     .then(function() {
-      postID++; //increments id
+      // postID++; //increments id //commenting out to test emty table
       res.send(
         `<h1>You submitted a post! Click <a href="/newpost">here</a> to submit another!</h1>`
       );
@@ -56,9 +63,10 @@ app.get("/newpost", ensureAuth, function(req, res) {
 //--------------------------------------\\
 
 function newPostToDB(post) {
+  slug = uuidv1()
   return db.raw(
-    "INSERT INTO posts (id, title, content, slug) VALUES (?, ?, ?, ?)",
-    [postID, post.title, post.content, post.title]
+    "INSERT INTO posts (title, content, slug) VALUES (?, ?, ?)",
+    [post.title, post.content, slug]
   );
 }
 
@@ -181,7 +189,7 @@ passport.deserializeUser(function(id, cb) {
 
 function ensureAuth(req, res, next) {
   if (passport.authenticate("local")) {
-    console.log("user -", req.user);
+    console.log("ensureAuth - user -", req.user);
     return next();
   }
   console.log("ensureAuth failed! ");
