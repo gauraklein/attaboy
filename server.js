@@ -22,6 +22,7 @@ const { viewIndividualPost, renderPost, prettyPrintJSON } = require('./modules/v
 
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
 const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
+const newAttagoryPage = fs.readFileSync('./templates/newAttagory.mustache', 'utf8')
 
 app.listen(port, () => {
    log.info("Listening on port " + port + " 🎉🎉🎉");
@@ -142,5 +143,28 @@ function ensureAuth(req, res, next) {
 // add new Attagory
 
 app.get('/attagories/addNew', function (req, res) {
-  
+  res.send(mustache.render(newAttagoryPage)) //has the submit form
 })
+
+//Adds in new post
+
+app.post('/attagories/addNew', function(req, res) {
+  newAttagoryToDB(req.body) //adds post
+  .then(function () {
+      
+      res.send(`<h1>You created a new attagory! Click <a href="/attagories/addNew">here</a> to create another!</h1>`)
+    })
+    .catch(function (err) {
+        console.error(err)
+      res.status(500).send('you did not submit an attagory')
+    })
+})
+
+//--------------------------------------\\
+//           ATTAGORY FUNCTIONS         \\
+//--------------------------------------\\
+let postID = 20
+function newAttagoryToDB (post) {
+  postID++
+  return db.raw('INSERT INTO attagories (id, attagory_name, attagory_description, slug) VALUES (?, ?, ?, ?)', [postID, post.attagory_name, post.attagory_description, post.attagory_name])
+}
