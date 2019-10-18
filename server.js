@@ -16,6 +16,7 @@ const log = require("./modules/logging.js");
 const mustache = require("mustache");
 const { newPostToDB } = require('./modules/newPostFunctions.js')
 const { viewIndividualPost, renderPost, prettyPrintJSON } = require('./modules/viewPostFunctions')
+const { renderAttagoryPosts, getAttagoryID, getRelevantPosts, newAttagoryToDB } = require('./modules/attagoryFunctions')
 
 //Templating
 
@@ -182,40 +183,5 @@ app.get('/attagories/:slug', function (req, res) {
   })
 })
 
-//--------------------------------------\\
-//           ATTAGORY FUNCTIONS         \\
-//--------------------------------------\\
 
-//Add Attagory to DB
-
-let postID = 20
-function newAttagoryToDB (post) {
-  postID++
-  return db.raw('INSERT INTO attagories (id, attagory_name, attagory_description, slug) VALUES (?, ?, ?, ?)', [postID, post.attagory_name, post.attagory_description, post.attagory_name])
-}
-
-//Attagory view/Render posts specific to attagory
-
-function getRelevantPosts (attagoryID) {
-  
-  const getRelevantPostsQuery = `
-  SELECT *
-  FROM posts 
-  WHERE attagory_id = ${attagoryID};
-`
-  return db.raw(getRelevantPostsQuery)
-}
-
-function getAttagoryID (attagorySlug) {
-  console.log('getting attagory from DB')
-  return db.raw(`
-  SELECT *
-  FROM attagories
-  WHERE slug = ?`, [attagorySlug])
-}
-
-function renderAttagoryPosts (allPosts) {
-  // console.log('this is the render all posts function', allPosts)
-  return '<ul>' + allPosts.map(renderPost).join('') + '</ul>'
-}
 
