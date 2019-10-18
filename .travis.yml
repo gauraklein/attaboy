@@ -3,10 +3,13 @@ sudo: false
 language: node_js
 
 node_js:
-    - node
+    - "7"
 
 install:
-    - npm ci
+  - npm ci
+  - npm install gulp-qunit
+  - npm install gulp-util
+  - npm install gulp
 
 script:
     - npm run lint
