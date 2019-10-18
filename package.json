@@ -28,6 +28,9 @@
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.5.0",
     "pg": "^7.12.1",
-    "uuidv1": "^1.6.14"
+    "uuidv1": "^1.6.14",
+    "gulp-qunit": "~0.2.1",
+      "gulp-util": "~2.2.14",
+      "gulp": "~3.5.1"
   }
 }
