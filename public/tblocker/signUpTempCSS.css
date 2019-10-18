@@ -1,0 +1,19 @@
+body 
+{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#form_container
+{
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
+}
+h1
+{
+    justify-content: center;
+    text-align: center;
+}
