@@ -120,15 +120,15 @@ function viewIndividualPost(slug) {
 
 function renderPost(postFromDb) {
   return `
-    <h1>${postFromDb.title}</h1>
+    <li><h1>${postFromDb.title}</h1>
     <h4>${postFromDb.content}</h4>
     <p>posted by: ${postFromDb.post_author}</p>
-    <p>total attaboys: ${postFromDb.post_attaboys}</p>
+    <p>total attaboys: ${postFromDb.post_attaboys}</p></li>
     
-    `;
+    `
 }
 function renderAllPosts(allPosts) {
-  return "<ul>" + allPosts.map(renderPost).join("") + "</ul>";
+  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderPost).join('') + '</ul></form>'
 }
 function createPosts(posts) {
   return db.raw(
@@ -147,9 +147,10 @@ function prettyPrintJSON(x) {
 
 app.get("/home", function(req, res) {
   getAllPosts(req.body).then(function(allPosts) {
+    console.log(allPosts);
     res.send(
       mustache.render(homepageTemplate, {
-        PostsListHTML: renderAllPosts(allPosts.rows[0])
+        PostsListHTML: renderAllPosts(allPosts.rows)
       })
     );
   });
