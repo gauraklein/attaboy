@@ -3,16 +3,9 @@ sudo: false
 language: node_js
 
 node_js:
-    - "7"
+    - "Stable"
 
-install:
-  - npm ci
-  - npm install gulp-qunit
-  - npm install gulp-util
-  - npm install gulp
-
-script:
-    - npm run lint
-    - npm run test:coveralls
-notifications:
-  email: false
+env:
+  - NODE_ENV = "developement"
+servises:
+  - postgres
