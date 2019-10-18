@@ -23,6 +23,8 @@ const { viewIndividualPost, renderPost, prettyPrintJSON } = require('./modules/v
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
 const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
 const newAttagoryPage = fs.readFileSync('./templates/newAttagory.mustache', 'utf8')
+const ViewAttagoryPage = fs.readFileSync('./templates/viewAttagory.mustache', 'utf8')
+
 
 app.listen(port, () => {
    log.info("Listening on port " + port + " 🎉🎉🎉");
@@ -160,11 +162,60 @@ app.post('/attagories/addNew', function(req, res) {
     })
 })
 
+//View Attagory
+
+app.get('/attagories/:slug', function (req, res) {
+  getAttagoryID(req.params.slug)
+  .then(function(attagory) {
+    console.log('this is the attagory id', attagory.rows[0].id)
+    getRelevantPosts(attagory.rows[0].id)
+    .then(function(postsObject) {
+      console.log('this is the number of posts', postsObject.rows.length)
+      var postHTML = renderAttagoryPosts(postsObject.rows)
+        console.log('these are all the posts', postHTML)
+        res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: postHTML }))
+    })
+  })
+  .catch(function(err) {
+    console.error(err)
+
+  })
+})
+
 //--------------------------------------\\
 //           ATTAGORY FUNCTIONS         \\
 //--------------------------------------\\
+
+//Add Attagory to DB
+
 let postID = 20
 function newAttagoryToDB (post) {
   postID++
   return db.raw('INSERT INTO attagories (id, attagory_name, attagory_description, slug) VALUES (?, ?, ?, ?)', [postID, post.attagory_name, post.attagory_description, post.attagory_name])
 }
+
+//Attagory view/Render posts specific to attagory
+
+function getRelevantPosts (attagoryID) {
+  
+  const getRelevantPostsQuery = `
+  SELECT *
+  FROM posts 
+  WHERE attagory_id = ${attagoryID};
+`
+  return db.raw(getRelevantPostsQuery)
+}
+
+function getAttagoryID (attagorySlug) {
+  console.log('getting attagory from DB')
+  return db.raw(`
+  SELECT *
+  FROM attagories
+  WHERE slug = ?`, [attagorySlug])
+}
+
+function renderAttagoryPosts (allPosts) {
+  // console.log('this is the render all posts function', allPosts)
+  return '<ul>' + allPosts.map(renderPost).join('') + '</ul>'
+}
+

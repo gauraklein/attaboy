@@ -5,7 +5,7 @@ function viewIndividualPost (slug) {
   }
 
 function renderPost (postFromDb) {
-
+  console.log('I am rendering this post', postFromDb.title)
    return `
     <h1>${postFromDb.title}</h1>
     <h4>${postFromDb.content}</h4>
@@ -24,3 +24,16 @@ function renderPost (postFromDb) {
       renderPost: renderPost,
       prettyPrintJSON: prettyPrintJSON
   }
+
+
+  //view individual post query
+
+  // SELECT
+	// posts.id AS postID,
+	// posts.title,
+	// posts.content,
+	// users.username,
+	// attagories.attagory_name
+	// 	FROM users
+	// 		Join posts ON posts.post_author = users.id
+	// 		Join attagories on attagories.id = posts.attagory_id;
