@@ -7,7 +7,7 @@ FROM users
 `;
 
 function addUser(newUser) {
-  console.log(newUser)
+  // console.log(newUser)
   // let id = ;
   let username = newUser.username;
   let password = newUser.password;
