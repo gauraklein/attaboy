@@ -36,7 +36,6 @@ passport.use(
     });
 })
 );
-
 app.use(
   session({
     secret: "keyboard cat",
@@ -55,11 +54,9 @@ app.use(
   done(null, user.id);
 });
 passport.deserializeUser(function(id, done) {
-  // console.log(id)
   db("users")
     .where({ id: id })
     .then(res => {
-      // console.log(res)
       done(null, res[0]);
     })
     .catch(error => done(error, false));
@@ -72,7 +69,6 @@ const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
-
 const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
 const viewPostTemplate = fs.readFileSync(
   "./templates/viewPost.mustache",
@@ -83,18 +79,9 @@ const viewPostTemplate = fs.readFileSync(
 //           NEW POST ROUTES            \\
 //--------------------------------------\\
 
-// let postID = 21; //var to make sure that the post id is correct // checking new post with emtpy table
-
-//try passport.authentication() below
-
-// console.log(req.body)
-// console.log("new post user - " + req.user)
-// console.log("new post user - " + req.user)
-
 app.post("/newpost", ensureAuth, (req, res, next) => {
   newPostToDB(req) //adds post
     .then(function() {
-      // postID++; //increments id //commenting out to test emty table
       res.send(
         `<h1>You submitted a post! Click <a href="/newpost">here</a> to submit another!</h1>`
       );
@@ -130,10 +117,8 @@ function newPostToDB(post) {
 
 app.get("/viewpost/:slug", ensureAuth, function(req, res) {
   viewIndividualPost(req.params.slug)
-    // res.send(viewPostTemplate)
     .then(function(post) {
       console.log("this is the request slug", req.params.slug);
-      // console.log(post.rows[0].title);
       res.send(renderPost(post.rows[0]));
     })
     .catch(function(err) {
@@ -188,16 +173,6 @@ app.get("/sign-up", (req, res) =>
 
 app.get("/auth", (req, res) => res.sendFile("auth.html", { root: __dirname }));
 
-// app.post(
-// "/auth",
-//   passport.authenticate("local", { failureRedirect: "/error" }),
-//   function(req, res) {
-//     console.log(req.session)
-//     req.session.passport;
-//     res.redirect("/success?email=" + req.user.username);
-//   }
-// );
-
 app.post("/auth", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (info) {
@@ -218,7 +193,6 @@ app.post("/auth", (req, res, next) => {
   })(req, res, next);
 });
 
-// res.redirect('/success?email='+req.user.username);
 
 app.get("/success", (req, res) =>
   res.send("Welcome " + req.query.email + "!!")
@@ -228,7 +202,6 @@ app.get("/error", (req, res) => res.send("error logging in"));
 function ensureAuth(req, res, next) {
   console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
-    // console.log(req.user)
     next();
   } else {
     res.redirect("/auth");
