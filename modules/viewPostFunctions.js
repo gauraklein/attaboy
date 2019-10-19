@@ -1,5 +1,10 @@
 const { db } = require("./db/dbConnection");
 
+const getAllPostsQuery = `
+  SELECT *
+  FROM Posts
+`;
+
 function viewIndividualPost (slug) {
     return db.raw('SELECT * FROM posts WHERE slug = ?', [slug])
   }
@@ -13,8 +18,15 @@ function renderPost (postFromDb) {
     <p>total attaboys: ${postFromDb.post_attaboys}</p>
     
     `
-
 }
+function getAllPosts() {
+  return db.raw(getAllPostsQuery);
+}
+
+function renderAllPosts(allPosts) {
+  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderPost).join('') + '</ul></form>'
+}
+
   function prettyPrintJSON (x) {
     return JSON.stringify(x, null, 2)
   } 
@@ -22,7 +34,10 @@ function renderPost (postFromDb) {
   module.exports = {
       viewIndividualPost: viewIndividualPost,
       renderPost: renderPost,
-      prettyPrintJSON: prettyPrintJSON
+      prettyPrintJSON: prettyPrintJSON,
+      renderAllPosts: renderAllPosts,
+      getAllPosts:getAllPosts
+
   }
 
 

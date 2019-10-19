@@ -66,25 +66,18 @@ passport.deserializeUser(function(id, done) {
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
 const { newPostToDB } = require('./modules/newPostFunctions.js')
-const { viewIndividualPost, renderPost, prettyPrintJSON } = require('./modules/viewPostFunctions')
+const { viewIndividualPost, renderPost, prettyPrintJSON, renderAllPosts, getAllPosts } = require('./modules/viewPostFunctions')
 const { renderAttagoryPosts, getAttagoryID, getRelevantPosts, newAttagoryToDB } = require('./modules/attagoryFunctions')
 const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
-// const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
-// const viewPostTemplate = fs.readFileSync(
-//   "./templates/viewPost.mustache",
-//   "utf8"
-// );
-
 
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
 const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
 const newAttagoryPage = fs.readFileSync('./templates/newAttagory.mustache', 'utf8')
 const ViewAttagoryPage = fs.readFileSync('./templates/viewAttagory.mustache', 'utf8')
-
-
+const homepageTemplate = fs.readFileSync("./homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -111,32 +104,17 @@ app.get("/newpost", ensureAuth, function(req, res) {
   res.send(mustache.render(newPostPage)); //has the submit form
 });
 
-// //--------------------------------------\\
-// //         NEW POST FUNCTIONS           \\
-// //--------------------------------------\\
-
-// function newPostToDB(post) {
-//   slug = uuidv1();
-//   return db.raw("INSERT INTO posts (post_author, title, content, slug) VALUES (?, ?, ?, ?)", [
-//     post.user.id,
-//     post.body.title,
-//     post.body.content,
-//     slug
-//   ]);
-// }
-
 //--------------------------------------\\
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-const homepageTemplate = fs.readFileSync("./homepage.mustache", "utf8");
-
 
 app.get("/viewpost/:slug", ensureAuth, function(req, res) {
+  console.log(req.params.slug)
   viewIndividualPost(req.params.slug)
     .then(function(post) {
       console.log("this is the request slug", req.params.slug);
-
+      console.log(post)
       res.send(renderPost(post.rows[0]));
     })
     .catch(function(err) {
@@ -144,6 +122,7 @@ app.get("/viewpost/:slug", ensureAuth, function(req, res) {
       res.status(404).send("that post has not been posted yet");
     });
 });
+
 app.post("/posts", function(req, res) {
   createposts(req.body)
     .then(function() {
@@ -165,32 +144,15 @@ app.post("/posts/:slug", function(req, res) {
 //--------------------------------------\\
 //        VIEW POST FUNCTIONS           \\
 //--------------------------------------\\
-const getAllPostsQuery = `
-  SELECT *
-  FROM Posts
-`;
-
-// function viewIndividualPost(slug) {
-//   return db.raw("SELECT * FROM posts WHERE slug = ?", [slug]);
-// }
 
 
-function renderAllPosts(allPosts) {
-  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderPost).join('') + '</ul></form>'
-}
-function createPosts(posts) {
-  return db.raw(
-    "INSERT INTO Cohorts (title, slug, isActive) VALUES (?, ?, true)",
-    [posts.title, posts.slug]
-  );
-}
 //--------------------------------------\\
 //     RENDERING POST TO HOME PAGE      \\
 //--------------------------------------\\
 
 app.get("/home", function(req, res) {
   getAllPosts(req.body).then(function(allPosts) {
-    console.log(allPosts);
+    console.debug(allPosts);
     res.send(
       mustache.render(homepageTemplate, {
         PostsListHTML: renderAllPosts(allPosts.rows)
@@ -198,6 +160,8 @@ app.get("/home", function(req, res) {
     );
   });
 });
+
+
 //            NEW USER ROUTES           \\
 //--------------------------------------\\
 
