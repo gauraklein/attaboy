@@ -72,11 +72,11 @@ const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
-const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
-const viewPostTemplate = fs.readFileSync(
-  "./templates/viewPost.mustache",
-  "utf8"
-);
+// const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
+// const viewPostTemplate = fs.readFileSync(
+//   "./templates/viewPost.mustache",
+//   "utf8"
+// );
 
 
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
@@ -111,19 +111,19 @@ app.get("/newpost", ensureAuth, function(req, res) {
   res.send(mustache.render(newPostPage)); //has the submit form
 });
 
-//--------------------------------------\\
-//         NEW POST FUNCTIONS           \\
-//--------------------------------------\\
+// //--------------------------------------\\
+// //         NEW POST FUNCTIONS           \\
+// //--------------------------------------\\
 
-function newPostToDB(post) {
-  slug = uuidv1();
-  return db.raw("INSERT INTO posts (post_author, title, content, slug) VALUES (?, ?, ?, ?)", [
-    post.user.id,
-    post.body.title,
-    post.body.content,
-    slug
-  ]);
-}
+// function newPostToDB(post) {
+//   slug = uuidv1();
+//   return db.raw("INSERT INTO posts (post_author, title, content, slug) VALUES (?, ?, ?, ?)", [
+//     post.user.id,
+//     post.body.title,
+//     post.body.content,
+//     slug
+//   ]);
+// }
 
 //--------------------------------------\\
 //          VIEW POST ROUTES            \\
@@ -170,9 +170,9 @@ const getAllPostsQuery = `
   FROM Posts
 `;
 
-function viewIndividualPost(slug) {
-  return db.raw("SELECT * FROM posts WHERE slug = ?", [slug]);
-}
+// function viewIndividualPost(slug) {
+//   return db.raw("SELECT * FROM posts WHERE slug = ?", [slug]);
+// }
 
 
 function renderAllPosts(allPosts) {
