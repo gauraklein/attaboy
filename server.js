@@ -67,6 +67,7 @@ const log = require("./modules/logging.js");
 const mustache = require("mustache");
 const { newPostToDB } = require('./modules/newPostFunctions.js')
 const { viewIndividualPost, renderPost, prettyPrintJSON, renderAllPosts, getAllPosts } = require('./modules/viewPostFunctions')
+const { viewIndividualComment, renderComment,renderAllComments, getAllComments } = require('./modules/viewCommentFunctions')
 const { renderAttagoryPosts, getAttagoryID, getRelevantPosts, newAttagoryToDB } = require('./modules/attagoryFunctions')
 const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
@@ -74,10 +75,11 @@ const uuidv1 = require("uuidv1");
 //Templating
 
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
+const viewCommentTemplate = fs.readFileSync('./templates/viewComment.mustache', 'utf8')
 const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
 const newAttagoryPage = fs.readFileSync('./templates/newAttagory.mustache', 'utf8')
 const ViewAttagoryPage = fs.readFileSync('./templates/viewAttagory.mustache', 'utf8')
-const homepageTemplate = fs.readFileSync("./homepage.mustache", "utf8");
+const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -140,9 +142,37 @@ app.post("/posts/:slug", function(req, res) {
 });
 
 //--------------------------------------\\
-//        VIEW POST FUNCTIONS           \\
+//        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
+app.get("/viewComment/:slug", ensureAuth, function(req, res) {
+  viewIndividualComment(req.params.slug)
+    .then(function(comment) {
+      console.log("this is the request slug", req.params.slug);
 
+      res.send(renderComment(comment.rows[0]));
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(404).send("that post has not been posted yet");
+    });
+});
+app.post("/comments", function(req, res) {
+  createcomments(req.body)
+    .then(function() {
+      res.send(mustache.render(viewCommentTemplate));
+    })
+    .catch(function() {
+      res.status(500).send("something went wrong");
+    });
+});
+app.post("/comments/:slug", function(req, res) {
+  console.log("You've left a comment");
+  console.log(req.params);
+  viewIndividualComment(req.params.slug).then(function(comments) {
+    console.log(comments);
+    res.send("this worked");
+  });
+});
 
 //--------------------------------------\\
 //     RENDERING POST TO HOME PAGE      \\
@@ -199,7 +229,7 @@ app.post("/auth", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/auth");
+      return res.redirect("/home");
     });
   })(req, res, next);
 });

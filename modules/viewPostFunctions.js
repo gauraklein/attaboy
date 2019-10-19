@@ -12,10 +12,11 @@ function viewIndividualPost (slug) {
 function renderPost (postFromDb) {
   console.log('I am rendering this post', postFromDb.title)
    return `
-    <h1>${postFromDb.title}</h1>
+    <a href="/viewpost/${postFromDb.slug}"><h1>${postFromDb.title}</h1></a>
     <h4>${postFromDb.content}</h4>
     <p>posted by: ${postFromDb.post_author}</p>
     <p>total attaboys: ${postFromDb.post_attaboys}</p>
+    <button>comment</button>
     
     `
 }
