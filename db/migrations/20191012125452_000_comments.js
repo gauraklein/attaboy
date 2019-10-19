@@ -17,5 +17,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.raw("DROP TABLE comments");
+  // return knex.schema.raw("DROP TABLE comments");
 };

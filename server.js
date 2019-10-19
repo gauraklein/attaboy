@@ -161,7 +161,7 @@ app.get("/home", function(req, res) {
   });
 });
 
-
+//--------------------------------------\\
 //            NEW USER ROUTES           \\
 //--------------------------------------\\
 
@@ -171,8 +171,8 @@ app.post("/sign-up", (req, res, nextFn) => {
       res.send("Added user successfully");
     })
     .catch(err => {
-      res.status(500).send("this is the error" + err);
-      console.err(err);
+      res.status(500).send("this is the error " + err);
+      console.log("this is the catch under new user routes" + err);
     });
 });
 
@@ -195,13 +195,13 @@ app.post("/auth", (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.redirect("/auth");
+      return res.redirect("/home");
     }
     req.login(user, err => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/auth");
+      return res.redirect("/home");
     });
   })(req, res, next);
 });

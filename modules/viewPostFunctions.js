@@ -19,6 +19,7 @@ function renderPost (postFromDb) {
     
     `
 }
+
 function getAllPosts() {
   return db.raw(getAllPostsQuery);
 }
