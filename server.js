@@ -1,19 +1,15 @@
 const fs = require("fs");
-
 //Express Server
 const express = require("express");
 const app = express();
 const port = 3000;
 const { db } = require("./modules/db/dbConnection");
 const session = require("express-session");
-// const FileStore = require('session-file-store')(session);
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const myPlaintextPassword = 'C0l0$$us!';
-const someOtherPlaintextPassword = 'TheMighty_Nein';
 
 passport.use(
   new LocalStrategy((username, password, done) => {
@@ -55,7 +51,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 passport.serializeUser(function(user, done) {
-  // console.log("seiralize user -", user.id);
   done(null, user.id);
 });
 passport.deserializeUser(function(id, done) {
