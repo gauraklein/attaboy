@@ -17,6 +17,7 @@ passport.use(
     console.log("got auth request");
     db("users")
       .where({ username: username })
+      // .orwhere({ email: username })
       .then(res => {
         // console.log(userRows)
         const user = res[0];
@@ -25,6 +26,7 @@ passport.use(
           console.log("User not found");
           done(null, false);
         }
+
         if (bcrypt.compareSync(user.password, password)) {
           console.log("Wrong Password");
           done(null, false);
@@ -186,12 +188,26 @@ app.get("/home", function(req, res) {
 app.post("/sign-up", (req, res, nextFn) => {
   addUser(req.body)
     .then(() => {
-      res.send("Added user successfully");
-    })
-    .catch(err => {
-      res.status(500).send("this is the error " + err);
-      console.log("this is the catch under new user routes" + err);
-    });
+      res.redirect("/home");
+    }).catch(function(err) {
+    let duplicateUsername = "23505";
+
+    if (err.code === duplicateUsername) {
+      res.send("Duplicate username");
+    } else if (err) {
+      console.log(err)
+      res.send('Email is not valid')
+    }
+    else {
+      res.send('addUser - Something went wrong.')
+    }
+    // console.error(err);
+  });
+
+    // .catch(err => {
+    //   res.status(500).send("this is the error " + err);
+    //   console.log("this is the catch under new user routes" + err);
+    // });
 });
 
 app.get("/sign-up", (req, res) =>
@@ -202,9 +218,9 @@ app.get("/sign-up", (req, res) =>
 //            Authentication            \\
 //--------------------------------------\\
 
-app.get("/auth", (req, res) => res.sendFile("auth.html", { root: __dirname }));
+app.get("/login", (req, res) => res.sendFile("auth.html", { root: __dirname }));
 
-app.post("/auth", (req, res, next) => {
+app.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (info) {
       return res.send(info.message);
@@ -213,7 +229,7 @@ app.post("/auth", (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.redirect("/home");
+      return res.redirect("/no-user");
     }
     req.login(user, err => {
       if (err) {
@@ -227,6 +243,12 @@ app.post("/auth", (req, res, next) => {
 app.get("/success", (req, res) =>
   res.send("Welcome " + req.query.email + "!!")
 );
+
+app.get("/no-user", (req, res) => res.send("No user found"));
+
+app.get("/bad-pass", (req, res) => res.send("Wrong password"));
+
+
 app.get("/error", (req, res) => res.send("error logging in"));
 
 function ensureAuth(req, res, next) {
@@ -234,7 +256,7 @@ function ensureAuth(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/auth");
+    res.redirect("/login");
   }
 }
 

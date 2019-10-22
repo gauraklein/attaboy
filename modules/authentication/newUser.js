@@ -2,6 +2,9 @@ const { db } = require("../db/dbConnection.js");
 const uuidv1 = require("uuidv1");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+
+
+
 const getAllUsersQuery = `
 SELECT *
 FROM users
@@ -11,38 +14,29 @@ function emailIsValid(email) {
   return /\S+@\S+\.\S+/.test(email);
 }
 
-function resolved(result) {
-  console.log("Resolved");
-}
+// function resolved(result) {
+//   console.log("Resolved");
+// }
 
-function rejected(result) {
-  console.error(result);
-}
+// function rejected(result) {
+//   console.error(result);
+// }
 
 function addUser(newUser) {
   console.log(newUser);
   let username = newUser.username;
   let password = bcrypt.hashSync(newUser.password, saltRounds);
   let email = newUser.email;
-  let slug = uuidv1();
-  function validationResults(newUser) {
+  let slug = username;
     if (emailIsValid(newUser.email)) {
-      return Promise.resolve()
-        .then(() => {
-          console.info("Inserting user in DB");
-          return db.raw(
+      return db.raw(
             "INSERT INTO users (username, password, email, slug) VALUES (?, ?, ?, ?)",
             [username, password, email, slug]
           );
-        })
-        .catch(function(err) {
-          console.error(err);
-        });
+        
     } else {
-      return Promise.reject(new Error("Email is not valid")).then(rejected);
+      return Promise.reject(new Error("Email is not valid"));
     }
-  }
-  return validationResults(newUser);
 }
 
 module.exports = {
