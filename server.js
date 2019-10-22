@@ -23,7 +23,7 @@ passport.use(
       .then(res => {
         // console.log(userRows)
         const user = res[0];
-        console.log(user);
+        // console.log(user);
         if (!user) {
           console.log("User not found");
           done(null, false);
@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 passport.serializeUser(function(user, done) {
-  console.log("seiralize user -", user.id);
+  // console.log("seiralize user -", user.id);
   done(null, user.id);
 });
 passport.deserializeUser(function(id, done) {
@@ -124,7 +124,7 @@ app.post("/newpost", ensureAuth, (req, res, next) => {
 });
 
 app.get("/newpost", ensureAuth, function(req, res) {
-  console.log(req.user);
+  // console.log(req.user);
   res.send(mustache.render(newPostPage)); //has the submit form
 });
 
@@ -133,15 +133,15 @@ app.get("/newpost", ensureAuth, function(req, res) {
 //--------------------------------------\\
 
 app.get("/viewpost/:slug", ensureAuth, function(req, res) {
-  console.log(req.params.slug);
+  // console.log(req.params.slug);
   viewIndividualPost(req.params.slug)
     .then(function(post) {
-      console.log("this is the request slug", req.params.slug);
-      console.log(post);
+      // console.log("this is the request slug", req.params.slug);
+      // console.log(post);
       res.send(renderPost(post.rows[0]));
     })
     .catch(function(err) {
-      console.error(err);
+      // console.error(err);
       res.status(404).send("that post has not been posted yet");
     });
 });
@@ -156,10 +156,10 @@ app.post("/posts", function(req, res) {
     });
 });
 app.post("/posts/:slug", function(req, res) {
-  console.log("post attempted");
-  console.log(req.params);
+  // console.log("post attempted");
+  // console.log(req.params);
   viewIndividualPost(req.params.slug).then(function(posts) {
-    console.log(posts);
+    // console.log(posts);
     res.send("this worked");
   });
 });
@@ -174,7 +174,7 @@ app.post("/posts/:slug", function(req, res) {
 
 app.get("/home", function(req, res) {
   getAllPosts(req.body).then(function(allPosts) {
-    console.debug(allPosts);
+    // console.debug(allPosts);
     res.send(
       mustache.render(homepageTemplate, {
         PostsListHTML: renderAllPosts(allPosts.rows)

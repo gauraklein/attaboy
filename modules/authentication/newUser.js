@@ -41,6 +41,8 @@ function addUser(newUser) {
           "INSERT INTO users (username, password, email, slug) VALUES (?, ?, ?, ?)",
           [username, password, email, slug]
         );
+      }).catch(function(err) {
+        console.error(err);
       });
     } else {
       return Promise.reject(new Error('Email is not valid')).then(rejected);
