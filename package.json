@@ -5,9 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls" , 
+    "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "start": "nodemon server.js"
-
   },
   "repository": {
     "type": "git",
@@ -24,7 +23,8 @@
     "body-parser": "1.19.0",
     "express": "4.17.1",
     "express-session": "1.17.0",
-    "knex": "0.19.5",
+    "jdenticon": "^2.2.0",
+    "knex": "^0.19.5",
     "mustache": "3.1.0",
     "nodemon": "1.19.3",
     "passport": "0.4.0",
