@@ -10,31 +10,36 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const myPlaintextPassword = 'C0l0$$us!';
+const someOtherPlaintextPassword = 'TheMighty_Nein';
+
 passport.use(
   new LocalStrategy((username, password, done) => {
     console.log("got auth request");
     db("users")
-    .where({ username: username })
-    .then(res => {
-      // console.log(userRows)
-      const user = res[0];
-      if (!user) {
-        console.log("User not found");
-        done(null, false);
-      }
-
-      if (user.password != password) {
-        console.log("Wrong Password");
-        done(null, false);
-      }
-      console.log("user found");
-      return done(null, user);
-    })
-    .catch(err => {
-      console.log("auth error - ", err);
-      done(err);
-    });
-})
+      .where({ username: username })
+      .then(res => {
+        // console.log(userRows)
+        const user = res[0];
+        console.log(user);
+        if (!user) {
+          console.log("User not found");
+          done(null, false);
+        }
+        if (bcrypt.compareSync(user.password, password)) {
+          console.log("Wrong Password");
+          done(null, false);
+        }
+        console.log("User found");
+        return done(null, user);
+      })
+      .catch(err => {
+        console.error("Local strategy error - ", err);
+        done(err);
+      });
+  })
 );
 app.use(
   session({
@@ -43,13 +48,13 @@ app.use(
     saveUninitialized: true,
     cookie: {}
   })
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(express.static("public"));
-  passport.serializeUser(function(user, done) {
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
+passport.serializeUser(function(user, done) {
   console.log("seiralize user -", user.id);
   done(null, user.id);
 });
@@ -65,24 +70,43 @@ passport.deserializeUser(function(id, done) {
 //Modules
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
-const { newPostToDB } = require('./modules/newPostFunctions.js')
-const { viewIndividualPost, renderPost, prettyPrintJSON, renderAllPosts, getAllPosts } = require('./modules/viewPostFunctions')
-const { renderAttagoryPosts, getAttagoryID, getRelevantPosts, newAttagoryToDB } = require('./modules/attagoryFunctions')
+const { newPostToDB } = require("./modules/newPostFunctions.js");
+const {
+  viewIndividualPost,
+  renderPost,
+  prettyPrintJSON,
+  renderAllPosts,
+  getAllPosts
+} = require("./modules/viewPostFunctions");
+const {
+  renderAttagoryPosts,
+  getAttagoryID,
+  getRelevantPosts,
+  newAttagoryToDB
+} = require("./modules/attagoryFunctions");
 const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
 
-const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
-const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
-const newAttagoryPage = fs.readFileSync('./templates/newAttagory.mustache', 'utf8')
-const ViewAttagoryPage = fs.readFileSync('./templates/viewAttagory.mustache', 'utf8')
+const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
+const viewPostTemplate = fs.readFileSync(
+  "./templates/viewPost.mustache",
+  "utf8"
+);
+const newAttagoryPage = fs.readFileSync(
+  "./templates/newAttagory.mustache",
+  "utf8"
+);
+const ViewAttagoryPage = fs.readFileSync(
+  "./templates/viewAttagory.mustache",
+  "utf8"
+);
 const homepageTemplate = fs.readFileSync("./homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
 //--------------------------------------\\
-
 
 // FIX ROUTING FOR NEW POSTS - CHANGED DURING MERGE************
 
@@ -100,7 +124,7 @@ app.post("/newpost", ensureAuth, (req, res, next) => {
 });
 
 app.get("/newpost", ensureAuth, function(req, res) {
-  console.log(req.user)
+  console.log(req.user);
   res.send(mustache.render(newPostPage)); //has the submit form
 });
 
@@ -108,13 +132,12 @@ app.get("/newpost", ensureAuth, function(req, res) {
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-
 app.get("/viewpost/:slug", ensureAuth, function(req, res) {
-  console.log(req.params.slug)
+  console.log(req.params.slug);
   viewIndividualPost(req.params.slug)
     .then(function(post) {
       console.log("this is the request slug", req.params.slug);
-      console.log(post)
+      console.log(post);
       res.send(renderPost(post.rows[0]));
     })
     .catch(function(err) {
@@ -144,7 +167,6 @@ app.post("/posts/:slug", function(req, res) {
 //--------------------------------------\\
 //        VIEW POST FUNCTIONS           \\
 //--------------------------------------\\
-
 
 //--------------------------------------\\
 //     RENDERING POST TO HOME PAGE      \\
@@ -206,7 +228,6 @@ app.post("/auth", (req, res, next) => {
   })(req, res, next);
 });
 
-
 app.get("/success", (req, res) =>
   res.send("Welcome " + req.query.email + "!!")
 );
@@ -219,9 +240,6 @@ function ensureAuth(req, res, next) {
   } else {
     res.redirect("/auth");
   }
-
-
-
 }
 
 //--------------------------------------\\
@@ -230,43 +248,42 @@ function ensureAuth(req, res, next) {
 
 // add new Attagory
 
-app.get('/attagories/addNew', function (req, res) {
-  res.send(mustache.render(newAttagoryPage)) //has the submit form
-})
+app.get("/attagories/addNew", function(req, res) {
+  res.send(mustache.render(newAttagoryPage)); //has the submit form
+});
 
 //Adds in new post
 
-app.post('/attagories/addNew', function(req, res) {
+app.post("/attagories/addNew", function(req, res) {
   newAttagoryToDB(req.body) //adds post
-  .then(function () {
-      
-      res.send(`<h1>You created a new attagory! Click <a href="/attagories/addNew">here</a> to create another!</h1>`)
+    .then(function() {
+      res.send(
+        `<h1>You created a new attagory! Click <a href="/attagories/addNew">here</a> to create another!</h1>`
+      );
     })
-    .catch(function (err) {
-        console.error(err)
-      res.status(500).send('you did not submit an attagory')
-    })
-})
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("you did not submit an attagory");
+    });
+});
 
 //View Attagory
 
-app.get('/attagories/:slug', function (req, res) {
+app.get("/attagories/:slug", function(req, res) {
   getAttagoryID(req.params.slug)
-  .then(function(attagory) {
-    console.log('this is the attagory id', attagory.rows[0].id)
-    getRelevantPosts(attagory.rows[0].id)
-    .then(function(postsObject) {
-      console.log('this is the number of posts', postsObject.rows.length)
-      var postHTML = renderAttagoryPosts(postsObject.rows)
-        console.log('these are all the posts', postHTML)
-        res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: postHTML }))
+    .then(function(attagory) {
+      console.log("this is the attagory id", attagory.rows[0].id);
+      getRelevantPosts(attagory.rows[0].id).then(function(postsObject) {
+        console.log("this is the number of posts", postsObject.rows.length);
+        var postHTML = renderAttagoryPosts(postsObject.rows);
+        console.log("these are all the posts", postHTML);
+        res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: postHTML }));
+      });
     })
-  })
-  .catch(function(err) {
-    console.error(err)
-
-  })
-})
+    .catch(function(err) {
+      console.error(err);
+    });
+});
 app.listen(port, () => {
   log.info("Listening on port " + port + " 🎉🎉🎉");
 });
