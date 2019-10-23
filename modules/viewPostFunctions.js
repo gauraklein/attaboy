@@ -12,11 +12,15 @@ function viewIndividualPost (slug) {
 function renderPost (postFromDb) {
   console.log('I am rendering this post', postFromDb.title)
    return `
-    <h1>${postFromDb.title}</h1>
-    <h4>${postFromDb.content}</h4>
-    <p>posted by: ${postFromDb.post_author}</p>
-    <p>total attaboys: ${postFromDb.post_attaboys}</p>
-    
+   
+    <div class="card border border-secondary">
+  <div class="card-body border border-primary">
+    <h5 class="card-title">${postFromDb.title}</h5>
+    <p class="card-text">${postFromDb.content}</p>
+    <footer class="blockquote-footer">posted by: ${postFromDb.post_author} <cite>total attaboys: ${postFromDb.post_attaboys}</cite></footer>
+  </div>
+</div>
+
     `
 }
 

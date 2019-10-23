@@ -108,7 +108,8 @@ const homepageTemplate = fs.readFileSync("./homepage.mustache", "utf8");
 
 // FIX ROUTING FOR NEW POSTS - CHANGED DURING MERGE************
 
-app.post("/newpost", ensureAuth, (req, res, next) => {
+app.post("/:attagory/newpost", ensureAuth, (req, res, next) => {
+  console.log('this is the post', req.params)
   newPostToDB(req) //adds post
     .then(function() {
       res.send(
@@ -121,7 +122,8 @@ app.post("/newpost", ensureAuth, (req, res, next) => {
     });
 });
 
-app.get("/newpost", ensureAuth, function(req, res) {
+app.get("/:attagory/newpost", ensureAuth, function(req, res) {
+  console.log('this is the get', req.params)
   // console.log(req.user);
   res.send(mustache.render(newPostPage)); //has the submit form
 });
@@ -144,27 +146,24 @@ app.get("/viewpost/:slug", ensureAuth, function(req, res) {
     });
 });
 
-app.post("/posts", function(req, res) {
-  createposts(req.body)
-    .then(function() {
-      res.send(mustache.render(homepageTemplate));
-    })
-    .catch(function() {
-      res.status(500).send("something went wrong");
-    });
-});
-app.post("/posts/:slug", function(req, res) {
-  // console.log("post attempted");
-  // console.log(req.params);
-  viewIndividualPost(req.params.slug).then(function(posts) {
-    // console.log(posts);
-    res.send("this worked");
-  });
-});
+// app.post("/posts", function(req, res) {
+//   createposts(req.body)
+//     .then(function() {
+//       res.send(mustache.render(homepageTemplate));
+//     })
+//     .catch(function() {
+//       res.status(500).send("something went wrong");
+//     });
+// });
+// app.post("/posts/:slug", function(req, res) {
+//   // console.log("post attempted");
+//   // console.log(req.params);
+//   viewIndividualPost(req.params.slug).then(function(posts) {
+//     // console.log(posts);
+//     res.send("this worked");
+//   });
+// });
 
-//--------------------------------------\\
-//        VIEW POST FUNCTIONS           \\
-//--------------------------------------\\
 
 //--------------------------------------\\
 //     RENDERING POST TO HOME PAGE      \\
@@ -270,6 +269,7 @@ app.get("/attagories/addNew", function(req, res) {
   res.send(mustache.render(newAttagoryPage)); //has the submit form
 });
 
+
 //Adds in new post
 
 app.post("/attagories/addNew", function(req, res) {
@@ -285,6 +285,7 @@ app.post("/attagories/addNew", function(req, res) {
     });
 });
 
+
 //View Attagory
 
 app.get("/attagories/:slug", function(req, res) {
@@ -294,7 +295,7 @@ app.get("/attagories/:slug", function(req, res) {
       getRelevantPosts(attagory.rows[0].id).then(function(postsObject) {
         console.log("this is the number of posts", postsObject.rows.length);
         var postHTML = renderAttagoryPosts(postsObject.rows);
-        console.log("these are all the posts", postHTML);
+        // console.log("these are all the posts", postHTML);
         res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: postHTML }));
       });
     })
