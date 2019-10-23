@@ -185,18 +185,18 @@ app.get("/home", function(req, res) {
 //            NEW USER ROUTES           \\
 //--------------------------------------\\
 
-app.post("/sign-up", (req, res, nextFn) => {
+app.post("/signup", (req, res, nextFn) => {
+  
   addUser(req.body)
     .then(() => {
       res.redirect("/home");
     }).catch(function(err) {
-    let duplicateUsername = "23505";
+   
+    if (err.constraint.includes('username')) {
+      res.send("Duplicate username, please choose a different username.");
+    } else if (err.constraint.includes('email')) {
 
-    if (err.code === duplicateUsername) {
-      res.send("Duplicate username");
-    } else if (err) {
-      console.log(err)
-      res.send('Email is not valid')
+      res.send('This email is already in use, please use a different email.')
     }
     else {
       res.send('addUser - Something went wrong.')
@@ -210,7 +210,7 @@ app.post("/sign-up", (req, res, nextFn) => {
     // });
 });
 
-app.get("/sign-up", (req, res) =>
+app.get("/signup", (req, res) =>
   res.sendFile("newUser.html", { root: __dirname })
 );
 
@@ -240,21 +240,21 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/home');
+});
+
 app.get("/success", (req, res) =>
   res.send("Welcome " + req.query.email + "!!")
 );
-
-app.get("/no-user", (req, res) => res.send("No user found"));
-
-app.get("/bad-pass", (req, res) => res.send("Wrong password"));
-
-
 app.get("/error", (req, res) => res.send("error logging in"));
 
 function ensureAuth(req, res, next) {
   console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     next();
+    res.redirect("/home")
   } else {
     res.redirect("/login");
   }
