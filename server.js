@@ -254,11 +254,13 @@ function ensureAuth(req, res, next) {
   console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     next();
-    res.redirect("/home")
+    // res.redirect("/home")
   } else {
     res.redirect("/login");
   }
 }
+
+
 
 //--------------------------------------\\
 //           ATTAGORY ROUTES            \\
