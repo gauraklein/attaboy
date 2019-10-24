@@ -65,6 +65,7 @@ passport.deserializeUser(function(id, done) {
 //Modules
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
+const { NewCommentToDB } = require('./modules/newCommentFunctions.js')
 const { newPostToDB } = require('./modules/newPostFunctions.js')
 const { viewIndividualPost, renderPost, prettyPrintJSON, renderAllPosts, getAllPosts } = require('./modules/viewPostFunctions')
 const { viewIndividualComment, renderComment,renderAllComments, getAllComments } = require('./modules/viewCommentFunctions')
@@ -73,7 +74,7 @@ const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
-
+const newCommentPage = fs.readFileSync('./templates/newComment.mustache', 'utf8');
 const newPostPage = fs.readFileSync('./templates/newPost.mustache', 'utf8');
 const viewCommentTemplate = fs.readFileSync('./templates/viewComment.mustache', 'utf8')
 const viewPostTemplate = fs.readFileSync('./templates/viewPost.mustache', 'utf8')
@@ -142,6 +143,27 @@ app.post("/posts/:slug", function(req, res) {
 });
 
 //--------------------------------------\\
+//        NEW COMMENT ROUTS             \\
+//--------------------------------------\\
+
+app.post("/:newComment", ensureAuth, (req, res, next) => {
+  NewCommentToDB(req) 
+    .then(function() {
+      res.send(
+        `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
+      );
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Comment not sent");
+    });
+});
+
+app.get("/newComment", ensureAuth, function(req, res) {
+  console.log(req.user)
+  res.send(mustache.render(newCommentPage)); //has the submit form
+});
+//--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
 app.get("/viewComment/:slug", ensureAuth, function(req, res) {
@@ -153,7 +175,7 @@ app.get("/viewComment/:slug", ensureAuth, function(req, res) {
     })
     .catch(function(err) {
       console.error(err);
-      res.status(404).send("that post has not been posted yet");
+      res.status(404).send("  ");
     });
 });
 app.post("/comments", function(req, res) {
@@ -245,7 +267,7 @@ function ensureAuth(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/auth");
+    res.redirect("/home");
   }
 
 
