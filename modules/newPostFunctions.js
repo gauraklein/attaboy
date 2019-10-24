@@ -1,8 +1,8 @@
 const { db } = require("./db/dbConnection");
 const uuidv1 = require('uuidv1')
 
-let postID = 20 /// deals with id not incrementing issue
 function newPostToDB(post) {
+  console.log(post.user)
   slug = uuidv1();
   return db.raw("INSERT INTO posts (post_author, title, content, slug) VALUES (?, ?, ?, ?)", [
     post.user.id,
