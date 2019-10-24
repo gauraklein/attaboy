@@ -10,8 +10,8 @@ SELECT *
 FROM users
 `;
 
-function emailIsValid(email) {
-  return /\S+@\S+\.\S+/.test(email);
+function emailIsValid (email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
 // function resolved(result) {
@@ -21,6 +21,8 @@ function emailIsValid(email) {
 // function rejected(result) {
 //   console.error(result);
 // }
+
+//This function assumes that the email address is valid.
 
 function addUser(newUser) {
   console.log(newUser);
