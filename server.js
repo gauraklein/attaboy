@@ -71,7 +71,7 @@ const mustache = require("mustache");
 const { newPostToDB } = require("./modules/newPostFunctions.js");
 const {
   viewIndividualPost,
-  renderPost,
+  renderSinglePost,
   prettyPrintJSON,
   renderAllPosts,
   getAllPosts
@@ -138,7 +138,7 @@ app.get("/viewpost/:slug", function(req, res) {
     .then(function(post) {
       // console.log("this is the request slug", req.params.slug);
       // console.log(post);
-      res.send(renderPost(post.rows[0]));
+      res.send(renderSinglePost(post.rows[0]));
     })
     .catch(function(err) {
       // console.error(err);

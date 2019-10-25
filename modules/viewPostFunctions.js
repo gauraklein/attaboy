@@ -1,44 +1,5 @@
 const { db } = require("./db/dbConnection");
 
-// const getAllCommentsQuery = `
-//   SELECT *
-//   FROM Comments
-// `;
-
-// function viewIndividualComment (slug) {
-//     return db.raw('SELECT * FROM comments WHERE slug = ?', [slug])
-//   }
-
-// function renderComment (commentFromDb) {
-//   console.log('I am rendering this comment', commentFromDb.title)
-//    return `
-//     <p>${commentFromDb.content}</p>
-//     <p>posted by: ${commentFromDb.post_author}</p>
-//     <p>total attaboys: ${commentFromDb.post_attaboys}</p>
-//     <button>comment${commentFromDb.body.content}</button>
-    
-//     `
-// }
-// function getAllComments() {
-//   return db.raw(getAllCommentsQuery);
-// }
-
-// function renderAllComments(allComments) {
-//   return '<form action="/comments/:slug" method ="comments"> <ul>' + allComments.map(renderComment).join('') + '</ul></form>'
-// }
-
-//   function prettyPrintJSON (x) {
-//     return JSON.stringify(x, null, 2)
-//   } 
-
-//   module.exports = {
-//       viewIndividualComment: viewIndividualComment,
-//       renderComment: renderComment,
-//       renderAllComments: renderAllComments,
-//       getAllComments:getAllComments
-
-//   }
-
 const getAllPostsQuery = `
 SELECT
 posts.id AS postID,
@@ -53,31 +14,41 @@ attagories.attagory_name
     Join attagories on attagories.id = posts.attagory_id;
 `;
 
+
 function viewIndividualPost (slug) {
-    return db.raw('SELECT * FROM posts WHERE post_slug = ?', slug)
+    return db.raw('SELECT * FROM posts WHERE post_slug = ?', [slug])
   }
 
-function renderPost (postFromDb) {
-  console.log('I am rendering this post:', postFromDb.title)
+function renderListPosts (postFromDb) {
+  console.log('I am rendering this post', postFromDb.title)
    return `
-  
+    <a href="/viewpost/${postFromDb.slug}"><h1>${postFromDb.title}</h1></a>
+    <h4>${postFromDb.content}</h4>
+    <p>posted by: ${postFromDb.post_author}</p>
+    <p>total attaboys: ${postFromDb.post_attaboys}</p>
+    `
+}
+
+function renderSinglePost (postFromDb) {
+  console.log('I am rendering this post', postFromDb.title)
+   return `
     <div class="card border border-secondary">
   <div class="card-body border border-primary">
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
     <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+    <button>Comment</button>
   </div>
 </div>
 
     `
 }
-
 function getAllPosts() {
   return db.raw(getAllPostsQuery);
 }
 
 function renderAllPosts(allPosts) {
-  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderPost).join('') + '</ul></form>'
+  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderSinglePost).join('') + '</ul></form>'
 }
 
   function prettyPrintJSON (x) {
@@ -86,7 +57,7 @@ function renderAllPosts(allPosts) {
 
   module.exports = {
       viewIndividualPost: viewIndividualPost,
-      renderPost: renderPost,
+      renderSinglePost: renderSinglePost,
       prettyPrintJSON: prettyPrintJSON,
       renderAllPosts: renderAllPosts,
       getAllPosts:getAllPosts
