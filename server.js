@@ -11,6 +11,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const { emailIsValid } = require("./modules/authentication/newUser.js");
 
 passport.use(
   new LocalStrategy((username, password, done) => {
@@ -100,7 +101,10 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
-const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
+const homepageTemplate = fs.readFileSync(
+  "./templates/homepage.mustache",
+  "utf8"
+);
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -169,7 +173,7 @@ app.get("/viewpost/:slug", function(req, res) {
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
-  NewCommentToDB(req) 
+  NewCommentToDB(req)
     .then(function() {
       res.send(
         `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
@@ -182,7 +186,7 @@ app.post("/newComment", ensureAuth, (req, res, next) => {
 });
 
 app.get("/newComment", ensureAuth, function(req, res) {
-  console.log(req.user)
+  console.log(req.user);
   res.send(mustache.render(newCommentPage)); //has the submit form
 });
 //--------------------------------------\\
@@ -238,28 +242,30 @@ app.get("/home", function(req, res) {
 //--------------------------------------\\
 
 app.post("/signup", (req, res, nextFn) => {
-  
-  addUser(req.body)
-    .then(() => {
-      res.redirect("/home");
-    }).catch(function(err) {
-   
-    if (err.constraint.includes('username')) {
-      res.send("Duplicate username, please choose a different username.");
-    } else if (err.constraint.includes('email')) {
-
-      res.send('This email is already in use, please use a different email.')
-    }
-    else {
-      res.send('addUser - Something went wrong.')
-    }
-    // console.error(err);
-  });
-
-    // .catch(err => {
-    //   res.status(500).send("this is the error " + err);
-    //   console.log("this is the catch under new user routes" + err);
-    // });
+  if (emailIsValid(req.body.email)) {
+    addUser(req.body)
+      .then(() => {
+        res.redirect("/home");
+      })
+      .catch(function(err) {
+        if (err.constraint.includes("username")) {
+          res.send("Duplicate username, please choose a different username.");
+        } else if (err.constraint.includes("email")) {
+          res.send(
+            "This email is already in use, please use a different email."
+          );
+        } else {
+          res.send("addUser - Something went wrong.");
+        }
+        // console.error(err);
+      });
+  } else {
+    res.send('Your email is invalid, please format your email such as "Email@Example.com"')
+  }
+  // .catch(err => {
+  //   res.status(500).send("this is the error " + err);
+  //   console.log("this is the catch under new user routes" + err);
+  // });
 });
 
 app.get("/signup", (req, res) =>
@@ -292,9 +298,9 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-app.get('/logout', function(req, res){
+app.get("/logout", function(req, res) {
   req.logout();
-  res.redirect('/home');
+  res.redirect("/home");
 });
 
 app.get("/success", (req, res) =>
@@ -311,8 +317,6 @@ function ensureAuth(req, res, next) {
     res.redirect("/login");
   }
 }
-
-
 
 //--------------------------------------\\
 //           ATTAGORY ROUTES            \\

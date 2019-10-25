@@ -6,7 +6,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex("posts").insert([
         {
-          id: 1,
+          // id: 1,
           attagory_id: 6,
           post_author: 2,
           title: "optimizing",
@@ -18,7 +18,7 @@ exports.seed = function(knex) {
           post_slug: "Horizontal"
         },
         {
-          id: 2,
+          // id: 2,
           attagory_id: 2,
           post_author: 7,
           title: "Fully-configurable",
@@ -30,7 +30,7 @@ exports.seed = function(knex) {
           post_slug: "concept"
         },
         {
-          id: 3,
+          // id: 3,
           attagory_id: 18,
           post_author: 7,
           title: "help-desk",
@@ -42,7 +42,7 @@ exports.seed = function(knex) {
           post_slug: "homogeneous"
         },
         {
-          id: 4,
+          // id: 4,
           attagory_id: 4,
           post_author: 9,
           title: "web-enabled",
@@ -54,7 +54,7 @@ exports.seed = function(knex) {
           post_slug: "toolset"
         },
         {
-          id: 5,
+          // id: 5,
           attagory_id: 14,
           post_author: 9,
           title: "Distributed",
@@ -66,7 +66,7 @@ exports.seed = function(knex) {
           post_slug: "Optimized"
         },
         {
-          id: 6,
+          // id: 6,
           attagory_id: 3,
           post_author: 5,
           title: "Vision-oriented",
@@ -78,7 +78,7 @@ exports.seed = function(knex) {
           post_slug: "hardware"
         },
         {
-          id: 7,
+          // id: 7,
           attagory_id: 20,
           post_author: 5,
           title: "benchmark",
@@ -90,7 +90,7 @@ exports.seed = function(knex) {
           post_slug: "heuristic"
         },
         {
-          id: 8,
+          // id: 8,
           attagory_id: 17,
           post_author: 8,
           title: "client-driven",
@@ -102,7 +102,7 @@ exports.seed = function(knex) {
           post_slug: "eco-centric"
         },
         {
-          id: 9,
+          // id: 9,
           attagory_id: 6,
           post_author: 4,
           title: "Managed",
@@ -114,7 +114,7 @@ exports.seed = function(knex) {
           post_slug: "parallelism"
         },
         {
-          id: 10,
+          // id: 10,
           attagory_id: 9,
           post_author: 3,
           title: "model",
@@ -126,7 +126,7 @@ exports.seed = function(knex) {
           post_slug: "leverage"
         },
         {
-          id: 11,
+          // id: 11,
           attagory_id: 7,
           post_author: 6,
           title: "task-force",
@@ -138,7 +138,7 @@ exports.seed = function(knex) {
           post_slug: "national"
         },
         {
-          id: 12,
+          // id: 12,
           attagory_id: 15,
           post_author: 9,
           title: "Automated",
@@ -150,7 +150,7 @@ exports.seed = function(knex) {
           post_slug: "knowledge base"
         },
         {
-          id: 13,
+          // id: 13,
           attagory_id: 2,
           post_author: 7,
           title: "zero tolerance",
@@ -162,7 +162,7 @@ exports.seed = function(knex) {
           post_slug: "directional"
         },
         {
-          id: 14,
+          // id: 14,
           attagory_id: 18,
           post_author: 6,
           title: "policy",
@@ -174,7 +174,7 @@ exports.seed = function(knex) {
           post_slug: "adapter"
         },
         {
-          id: 15,
+          // id: 15,
           attagory_id: 15,
           post_author: 2,
           title: "empowering",
@@ -186,7 +186,7 @@ exports.seed = function(knex) {
           post_slug: "workforce"
         },
         {
-          id: 16,
+          // id: 16,
           attagory_id: 8,
           post_author: 10,
           title: "budgetary management",
@@ -198,7 +198,7 @@ exports.seed = function(knex) {
           post_slug: "logistical"
         },
         {
-          id: 17,
+          // id: 17,
           attagory_id: 5,
           post_author: 1,
           title: "analyzing",
@@ -210,7 +210,7 @@ exports.seed = function(knex) {
           post_slug: "collaboration"
         },
         {
-          id: 18,
+          // id: 18,
           attagory_id: 18,
           post_author: 6,
           title: "Right-sized",
@@ -222,7 +222,7 @@ exports.seed = function(knex) {
           post_slug: "Object-based"
         },
         {
-          id: 19,
+          // id: 19,
           attagory_id: 20,
           post_author: 6,
           title: "conglomeration",
@@ -234,7 +234,7 @@ exports.seed = function(knex) {
           post_slug: "Ergonomic"
         },
         {
-          id: 20,
+          // id: 20,
           attagory_id: 10,
           post_author: 3,
           title: "Organized",
