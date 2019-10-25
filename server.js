@@ -146,7 +146,7 @@ app.post("/posts/:slug", function(req, res) {
 //        NEW COMMENT ROUTS             \\
 //--------------------------------------\\
 
-app.post("/:newComment", ensureAuth, (req, res, next) => {
+app.post("/newComment", ensureAuth, (req, res, next) => {
   NewCommentToDB(req) 
     .then(function() {
       res.send(
