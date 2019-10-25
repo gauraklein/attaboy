@@ -1,4 +1,4 @@
-
+const { db } = require("./db/dbConnection");
 const getAllCommentsQuery = `
   SELECT *
   FROM Comments
@@ -14,10 +14,11 @@ function renderComment (commentFromDb) {
     <p>${commentFromDb.content}</p>
     <p>posted by: ${commentFromDb.post_author}</p>
     <p>total attaboys: ${commentFromDb.post_attaboys}</p>
-    <button>comment${commentFromDb.body.content}</button>
+    
     
     `
 }
+//<button>comment${commentFromDb.body.content}</button>
 function getAllComments() {
   return db.raw(getAllCommentsQuery);
 }
