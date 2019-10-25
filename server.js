@@ -71,7 +71,7 @@ const mustache = require("mustache");
 const { newPostToDB } = require("./modules/newPostFunctions.js");
 const {
   viewIndividualPost,
-  renderPost,
+  renderSinglePost,
   prettyPrintJSON,
   renderAllPosts,
   getAllPosts
@@ -100,7 +100,7 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
-const homepageTemplate = fs.readFileSync("./homepage.mustache", "utf8");
+const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -136,7 +136,7 @@ app.get("/viewpost/:slug", ensureAuth, function(req, res) {
     .then(function(post) {
       // console.log("this is the request slug", req.params.slug);
       // console.log(post);
-      res.send(renderPost(post.rows[0]));
+      res.send(renderSinglePost(post.rows[0]));
     })
     .catch(function(err) {
       // console.error(err);
