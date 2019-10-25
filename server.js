@@ -163,8 +163,58 @@ app.post("/posts/:slug", function(req, res) {
 });
 
 //--------------------------------------\\
-//        VIEW POST FUNCTIONS           \\
+//        NEW COMMENT ROUTS             \\
 //--------------------------------------\\
+
+app.post("/newComment", ensureAuth, (req, res, next) => {
+  NewCommentToDB(req) 
+    .then(function() {
+      res.send(
+        `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
+      );
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Comment not sent");
+    });
+});
+
+app.get("/newComment", ensureAuth, function(req, res) {
+  console.log(req.user)
+  res.send(mustache.render(newCommentPage)); //has the submit form
+});
+//--------------------------------------\\
+//        VIEW COMMENT ROUTS            \\
+//--------------------------------------\\
+app.get("/viewComment/:slug", ensureAuth, function(req, res) {
+  viewIndividualComment(req.params.slug)
+    .then(function(comment) {
+      console.log("this is the request slug", req.params.slug);
+
+      res.send(renderComment(comment.rows[0]));
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(404).send("  ");
+    });
+});
+app.post("/comments", function(req, res) {
+  createcomments(req.body)
+    .then(function() {
+      res.send(mustache.render(viewCommentTemplate));
+    })
+    .catch(function() {
+      res.status(500).send("something went wrong");
+    });
+});
+app.post("/comments/:slug", function(req, res) {
+  console.log("You've left a comment");
+  console.log(req.params);
+  viewIndividualComment(req.params.slug).then(function(comments) {
+    console.log(comments);
+    res.send("this worked");
+  });
+});
 
 //--------------------------------------\\
 //     RENDERING POST TO HOME PAGE      \\
