@@ -11,6 +11,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const { emailIsValid } = require("./modules/authentication/newUser.js");
 
 passport.use(
   new LocalStrategy((username, password, done) => {
@@ -107,8 +108,15 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
+<<<<<<< HEAD
 const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
 const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
+=======
+const homepageTemplate = fs.readFileSync(
+  "./templates/homepage.mustache",
+  "utf8"
+);
+>>>>>>> b7e6760bb178e808390eaf8693dfac9b304fe2a7
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -116,7 +124,8 @@ const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8"
 
 // FIX ROUTING FOR NEW POSTS - CHANGED DURING MERGE************
 
-app.post("/newpost", ensureAuth, (req, res, next) => {
+app.post("/:attagory/newpost", ensureAuth, (req, res, next) => {
+  console.log('this is the post', req.params)
   newPostToDB(req) //adds post
     .then(function() {
       res.send(
@@ -129,7 +138,8 @@ app.post("/newpost", ensureAuth, (req, res, next) => {
     });
 });
 
-app.get("/newpost", ensureAuth, function(req, res) {
+app.get("/:attagory/newpost", ensureAuth, function(req, res) {
+  console.log('this is the get', req.params)
   // console.log(req.user);
   res.send(mustache.render(newPostPage)); //has the submit form
 });
@@ -138,7 +148,7 @@ app.get("/newpost", ensureAuth, function(req, res) {
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-app.get("/viewpost/:slug", ensureAuth, function(req, res) {
+app.get("/viewpost/:slug", function(req, res) {
   // console.log(req.params.slug);
   viewIndividualPost(req.params.slug)
     .then(function(post) {
@@ -152,30 +162,30 @@ app.get("/viewpost/:slug", ensureAuth, function(req, res) {
     });
 });
 
-app.post("/posts", function(req, res) {
-  createposts(req.body)
-    .then(function() {
-      res.send(mustache.render(homepageTemplate));
-    })
-    .catch(function() {
-      res.status(500).send("something went wrong");
-    });
-});
-app.post("/posts/:slug", function(req, res) {
-  // console.log("post attempted");
-  // console.log(req.params);
-  viewIndividualPost(req.params.slug).then(function(posts) {
-    // console.log(posts);
-    res.send("this worked");
-  });
-});
+// app.post("/posts", function(req, res) {
+//   createposts(req.body)
+//     .then(function() {
+//       res.send(mustache.render(homepageTemplate));
+//     })
+//     .catch(function() {
+//       res.status(500).send("something went wrong");
+//     });
+// });
+// app.post("/posts/:slug", function(req, res) {
+//   // console.log("post attempted");
+//   // console.log(req.params);
+//   viewIndividualPost(req.params.slug).then(function(posts) {
+//     // console.log(posts);
+//     res.send("this worked");
+//   });
+// });
 
 //--------------------------------------\\
 //        NEW COMMENT ROUTS             \\
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
-  NewCommentToDB(req) 
+  NewCommentToDB(req)
     .then(function() {
       res.send(
         `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
@@ -188,7 +198,7 @@ app.post("/newComment", ensureAuth, (req, res, next) => {
 });
 
 app.get("/newComment", ensureAuth, function(req, res) {
-  console.log(req.user)
+  console.log(req.user);
   res.send(mustache.render(newCommentPage)); //has the submit form
 });
 //--------------------------------------\\
@@ -255,32 +265,34 @@ app.get("/Commenthome", function(req, res) {
 //--------------------------------------\\
 
 app.post("/signup", (req, res, nextFn) => {
-  
-  addUser(req.body)
-    .then(() => {
-      res.redirect("/home");
-    }).catch(function(err) {
-   
-    if (err.constraint.includes('username')) {
-      res.send("Duplicate username, please choose a different username.");
-    } else if (err.constraint.includes('email')) {
-
-      res.send('This email is already in use, please use a different email.')
-    }
-    else {
-      res.send('addUser - Something went wrong.')
-    }
-    // console.error(err);
-  });
-
-    // .catch(err => {
-    //   res.status(500).send("this is the error " + err);
-    //   console.log("this is the catch under new user routes" + err);
-    // });
+  if (emailIsValid(req.body.email)) {
+    addUser(req.body)
+      .then(() => {
+        res.redirect("/home");
+      })
+      .catch(function(err) {
+        if (err.constraint.includes("username")) {
+          res.send("Duplicate username, please choose a different username.");
+        } else if (err.constraint.includes("email")) {
+          res.send(
+            "This email is already in use, please use a different email."
+          );
+        } else {
+          res.send("addUser - Something went wrong.");
+        }
+        // console.error(err);
+      });
+  } else {
+    res.send('Your email is invalid, please format your email such as "Email@Example.com"')
+  }
+  // .catch(err => {
+  //   res.status(500).send("this is the error " + err);
+  //   console.log("this is the catch under new user routes" + err);
+  // });
 });
 
 app.get("/signup", (req, res) =>
-  res.sendFile("newUser.html", { root: __dirname })
+  res.sendFile("./templates/newUser.html", { root: __dirname })
 );
 
 //--------------------------------------\\
@@ -309,9 +321,9 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-app.get('/logout', function(req, res){
+app.get("/logout", function(req, res) {
   req.logout();
-  res.redirect('/home');
+  res.redirect("/home");
 });
 
 app.get("/success", (req, res) =>
@@ -329,8 +341,6 @@ function ensureAuth(req, res, next) {
   }
 }
 
-
-
 //--------------------------------------\\
 //           ATTAGORY ROUTES            \\
 //--------------------------------------\\
@@ -340,6 +350,7 @@ function ensureAuth(req, res, next) {
 app.get("/attagories/addNew", function(req, res) {
   res.send(mustache.render(newAttagoryPage)); //has the submit form
 });
+
 
 //Adds in new post
 
@@ -356,6 +367,7 @@ app.post("/attagories/addNew", function(req, res) {
     });
 });
 
+
 //View Attagory
 
 app.get("/attagories/:slug", function(req, res) {
@@ -365,7 +377,7 @@ app.get("/attagories/:slug", function(req, res) {
       getRelevantPosts(attagory.rows[0].id).then(function(postsObject) {
         console.log("this is the number of posts", postsObject.rows.length);
         var postHTML = renderAttagoryPosts(postsObject.rows);
-        console.log("these are all the posts", postHTML);
+        // console.log("these are all the posts", postHTML);
         res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: postHTML }));
       });
     })

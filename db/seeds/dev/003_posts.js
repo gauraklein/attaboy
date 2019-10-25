@@ -6,7 +6,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex("posts").insert([
         {
-          id: 1,
+          // id: 1,
           attagory_id: 6,
           post_author: 2,
           title: "optimizing",
@@ -15,10 +15,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/177x241.jpg/ff4444/ffffff",
           post_attaboys: 100,
           total_comments: 44,
-          slug: "Horizontal"
+          post_slug: "Horizontal"
         },
         {
-          id: 2,
+          // id: 2,
           attagory_id: 2,
           post_author: 7,
           title: "Fully-configurable",
@@ -27,10 +27,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/150x213.png/dddddd/000000",
           post_attaboys: 95,
           total_comments: 64,
-          slug: "concept"
+          post_slug: "concept"
         },
         {
-          id: 3,
+          // id: 3,
           attagory_id: 18,
           post_author: 7,
           title: "help-desk",
@@ -39,10 +39,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/248x133.png/ff4444/ffffff",
           post_attaboys: 21,
           total_comments: 86,
-          slug: "homogeneous"
+          post_slug: "homogeneous"
         },
         {
-          id: 4,
+          // id: 4,
           attagory_id: 4,
           post_author: 9,
           title: "web-enabled",
@@ -51,10 +51,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/249x202.bmp/5fa2dd/ffffff",
           post_attaboys: 32,
           total_comments: 77,
-          slug: "toolset"
+          post_slug: "toolset"
         },
         {
-          id: 5,
+          // id: 5,
           attagory_id: 14,
           post_author: 9,
           title: "Distributed",
@@ -63,10 +63,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/156x110.bmp/dddddd/000000",
           post_attaboys: 97,
           total_comments: 71,
-          slug: "Optimized"
+          post_slug: "Optimized"
         },
         {
-          id: 6,
+          // id: 6,
           attagory_id: 3,
           post_author: 5,
           title: "Vision-oriented",
@@ -75,10 +75,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/124x239.png/dddddd/000000",
           post_attaboys: 2,
           total_comments: 67,
-          slug: "hardware"
+          post_slug: "hardware"
         },
         {
-          id: 7,
+          // id: 7,
           attagory_id: 20,
           post_author: 5,
           title: "benchmark",
@@ -87,10 +87,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/138x234.png/cc0000/ffffff",
           post_attaboys: 83,
           total_comments: 31,
-          slug: "heuristic"
+          post_slug: "heuristic"
         },
         {
-          id: 8,
+          // id: 8,
           attagory_id: 17,
           post_author: 8,
           title: "client-driven",
@@ -99,10 +99,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/220x132.png/dddddd/000000",
           post_attaboys: 9,
           total_comments: 96,
-          slug: "eco-centric"
+          post_slug: "eco-centric"
         },
         {
-          id: 9,
+          // id: 9,
           attagory_id: 6,
           post_author: 4,
           title: "Managed",
@@ -111,10 +111,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/140x162.jpg/ff4444/ffffff",
           post_attaboys: 61,
           total_comments: 8,
-          slug: "parallelism"
+          post_slug: "parallelism"
         },
         {
-          id: 10,
+          // id: 10,
           attagory_id: 9,
           post_author: 3,
           title: "model",
@@ -123,10 +123,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/149x108.jpg/cc0000/ffffff",
           post_attaboys: 82,
           total_comments: 63,
-          slug: "leverage"
+          post_slug: "leverage"
         },
         {
-          id: 11,
+          // id: 11,
           attagory_id: 7,
           post_author: 6,
           title: "task-force",
@@ -135,10 +135,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/193x225.bmp/cc0000/ffffff",
           post_attaboys: 87,
           total_comments: 84,
-          slug: "national"
+          post_slug: "national"
         },
         {
-          id: 12,
+          // id: 12,
           attagory_id: 15,
           post_author: 9,
           title: "Automated",
@@ -147,10 +147,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/122x138.png/ff4444/ffffff",
           post_attaboys: 20,
           total_comments: 24,
-          slug: "knowledge base"
+          post_slug: "knowledge base"
         },
         {
-          id: 13,
+          // id: 13,
           attagory_id: 2,
           post_author: 7,
           title: "zero tolerance",
@@ -159,10 +159,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/199x230.png/cc0000/ffffff",
           post_attaboys: 53,
           total_comments: 9,
-          slug: "directional"
+          post_slug: "directional"
         },
         {
-          id: 14,
+          // id: 14,
           attagory_id: 18,
           post_author: 6,
           title: "policy",
@@ -171,10 +171,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/201x225.bmp/ff4444/ffffff",
           post_attaboys: 88,
           total_comments: 38,
-          slug: "adapter"
+          post_slug: "adapter"
         },
         {
-          id: 15,
+          // id: 15,
           attagory_id: 15,
           post_author: 2,
           title: "empowering",
@@ -183,10 +183,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/224x143.jpg/cc0000/ffffff",
           post_attaboys: 55,
           total_comments: 98,
-          slug: "workforce"
+          post_slug: "workforce"
         },
         {
-          id: 16,
+          // id: 16,
           attagory_id: 8,
           post_author: 10,
           title: "budgetary management",
@@ -195,10 +195,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/172x135.png/ff4444/ffffff",
           post_attaboys: 61,
           total_comments: 12,
-          slug: "logistical"
+          post_slug: "logistical"
         },
         {
-          id: 17,
+          // id: 17,
           attagory_id: 5,
           post_author: 1,
           title: "analyzing",
@@ -207,10 +207,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/185x214.bmp/cc0000/ffffff",
           post_attaboys: 10,
           total_comments: 67,
-          slug: "collaboration"
+          post_slug: "collaboration"
         },
         {
-          id: 18,
+          // id: 18,
           attagory_id: 18,
           post_author: 6,
           title: "Right-sized",
@@ -219,10 +219,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/231x167.png/dddddd/000000",
           post_attaboys: 7,
           total_comments: 47,
-          slug: "Object-based"
+          post_slug: "Object-based"
         },
         {
-          id: 19,
+          // id: 19,
           attagory_id: 20,
           post_author: 6,
           title: "conglomeration",
@@ -231,10 +231,10 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/202x149.jpg/cc0000/ffffff",
           post_attaboys: 40,
           total_comments: 98,
-          slug: "Ergonomic"
+          post_slug: "Ergonomic"
         },
         {
-          id: 20,
+          // id: 20,
           attagory_id: 10,
           post_author: 3,
           title: "Organized",
@@ -243,7 +243,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/193x231.jpg/cc0000/ffffff",
           post_attaboys: 92,
           total_comments: 14,
-          slug: "client-driven"
+          post_slug: "client-driven"
         }
       ]);
     });

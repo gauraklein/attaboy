@@ -6,7 +6,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex("users").insert([
         {
-          id: 1,
+          // id: 1,
           username: "vdobbing0",
           password: "test",
           email: "mplanke0@harvard.edu",
@@ -15,7 +15,7 @@ exports.seed = function(knex) {
           is_admin: false
         },
         {
-          id: 2,
+          // id: 2,
           username: "kjacquemot1",
           password: "test",
           email: "vjoblin1@mozilla.com",
@@ -24,7 +24,7 @@ exports.seed = function(knex) {
           is_admin: true
         },
         {
-          id: 3,
+          // id: 3,
           username: "wcassells2",
           password: "test",
           email: "tstiff2@hhs.gov",
@@ -33,7 +33,7 @@ exports.seed = function(knex) {
           is_admin: false
         },
         {
-          id: 4,
+          // id: 4,
           username: "ashelper3",
           password: "test",
           email: "btrinkwon3@artisteer.com",
@@ -42,7 +42,7 @@ exports.seed = function(knex) {
           is_admin: true
         },
         {
-          id: 5,
+          // id: 5,
           username: "msouthard4",
           password: "test",
           email: "ahenrych4@about.me",
@@ -51,7 +51,7 @@ exports.seed = function(knex) {
           is_admin: false
         },
         {
-          id: 6,
+          // id: 6,
           username: "jkidstone5",
           password: "test",
           email: "thorsell5@tripadvisor.com",
@@ -60,7 +60,7 @@ exports.seed = function(knex) {
           is_admin: true
         },
         {
-          id: 7,
+          // id: 7,
           username: "rlongman6",
           password: "test",
           email: "dalbion6@weather.com",
@@ -69,7 +69,7 @@ exports.seed = function(knex) {
           is_admin: true
         },
         {
-          id: 8,
+          // id: 8,
           username: "sgloucester7",
           password: "test",
           email: "fmowle7@slate.com",
@@ -78,7 +78,7 @@ exports.seed = function(knex) {
           is_admin: false
         },
         {
-          id: 9,
+          // id: 9,
           username: "bkorn8",
           password: "test",
           email: "mpoulton8@squarespace.com",
@@ -87,7 +87,7 @@ exports.seed = function(knex) {
           is_admin: true
         },
         {
-          id: 10,
+          // id: 10,
           username: "rbrahmer9",
           password: "test",
           email: "pberens9@google.ru",
