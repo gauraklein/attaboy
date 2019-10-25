@@ -69,7 +69,14 @@ passport.deserializeUser(function(id, done) {
 //Modules
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
+const { NewCommentToDB } = require("./modules/newCommentFunctions.js");
 const { newPostToDB } = require("./modules/newPostFunctions.js");
+const {
+  viewIndividualComment,
+      renderComment,
+      renderAllComments,
+      getAllComments
+} = require("./modules/viewCommentFunctions");
 const {
   viewIndividualPost,
   renderSinglePost,
@@ -87,7 +94,7 @@ const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
-
+const newCommentPage = fs.readFileSync("./templates/newComment.mustache", "utf8");
 const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
 const viewPostTemplate = fs.readFileSync(
   "./templates/viewPost.mustache",
@@ -101,10 +108,15 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
+<<<<<<< HEAD
+const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
+const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
+=======
 const homepageTemplate = fs.readFileSync(
   "./templates/homepage.mustache",
   "utf8"
 );
+>>>>>>> b7e6760bb178e808390eaf8693dfac9b304fe2a7
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -195,12 +207,12 @@ app.get("/newComment", ensureAuth, function(req, res) {
 app.get("/viewComment/:slug", ensureAuth, function(req, res) {
   viewIndividualComment(req.params.slug)
     .then(function(comment) {
-      console.log("this is the request slug", req.params.slug);
+      // console.log("this is the request slug", req.params.slug);
 
       res.send(renderComment(comment.rows[0]));
     })
     .catch(function(err) {
-      console.error(err);
+      // console.error(err);
       res.status(404).send("  ");
     });
 });
@@ -236,6 +248,17 @@ app.get("/home", function(req, res) {
     );
   });
 });
+app.get("/Commenthome", function(req, res) {
+  getAllComments(req.body).then(function(allcomments) {
+    // console.debug(allPosts);
+    res.send(
+      mustache.render(viewCommentTemplate , {
+        CommentListHTML: renderAllComments(allcomments.rows)
+      })
+    );
+  });
+});
+
 
 //--------------------------------------\\
 //            NEW USER ROUTES           \\
