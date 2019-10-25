@@ -10,7 +10,7 @@ exports.up = function(knex) {
       table.string("images");
       table.integer("post_attaboys");
       table.integer("total_comments");
-      table.string("slug");
+      table.string("post_slug");
       table.timestamps(true, true);
     });
   };

@@ -15,7 +15,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/177x241.jpg/ff4444/ffffff",
           post_attaboys: 100,
           total_comments: 44,
-          slug: "Horizontal"
+          post_slug: "Horizontal"
         },
         {
           id: 2,
@@ -27,7 +27,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/150x213.png/dddddd/000000",
           post_attaboys: 95,
           total_comments: 64,
-          slug: "concept"
+          post_slug: "concept"
         },
         {
           id: 3,
@@ -39,7 +39,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/248x133.png/ff4444/ffffff",
           post_attaboys: 21,
           total_comments: 86,
-          slug: "homogeneous"
+          post_slug: "homogeneous"
         },
         {
           id: 4,
@@ -51,7 +51,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/249x202.bmp/5fa2dd/ffffff",
           post_attaboys: 32,
           total_comments: 77,
-          slug: "toolset"
+          post_slug: "toolset"
         },
         {
           id: 5,
@@ -63,7 +63,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/156x110.bmp/dddddd/000000",
           post_attaboys: 97,
           total_comments: 71,
-          slug: "Optimized"
+          post_slug: "Optimized"
         },
         {
           id: 6,
@@ -75,7 +75,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/124x239.png/dddddd/000000",
           post_attaboys: 2,
           total_comments: 67,
-          slug: "hardware"
+          post_slug: "hardware"
         },
         {
           id: 7,
@@ -87,7 +87,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/138x234.png/cc0000/ffffff",
           post_attaboys: 83,
           total_comments: 31,
-          slug: "heuristic"
+          post_slug: "heuristic"
         },
         {
           id: 8,
@@ -99,7 +99,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/220x132.png/dddddd/000000",
           post_attaboys: 9,
           total_comments: 96,
-          slug: "eco-centric"
+          post_slug: "eco-centric"
         },
         {
           id: 9,
@@ -111,7 +111,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/140x162.jpg/ff4444/ffffff",
           post_attaboys: 61,
           total_comments: 8,
-          slug: "parallelism"
+          post_slug: "parallelism"
         },
         {
           id: 10,
@@ -123,7 +123,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/149x108.jpg/cc0000/ffffff",
           post_attaboys: 82,
           total_comments: 63,
-          slug: "leverage"
+          post_slug: "leverage"
         },
         {
           id: 11,
@@ -135,7 +135,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/193x225.bmp/cc0000/ffffff",
           post_attaboys: 87,
           total_comments: 84,
-          slug: "national"
+          post_slug: "national"
         },
         {
           id: 12,
@@ -147,7 +147,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/122x138.png/ff4444/ffffff",
           post_attaboys: 20,
           total_comments: 24,
-          slug: "knowledge base"
+          post_slug: "knowledge base"
         },
         {
           id: 13,
@@ -159,7 +159,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/199x230.png/cc0000/ffffff",
           post_attaboys: 53,
           total_comments: 9,
-          slug: "directional"
+          post_slug: "directional"
         },
         {
           id: 14,
@@ -171,7 +171,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/201x225.bmp/ff4444/ffffff",
           post_attaboys: 88,
           total_comments: 38,
-          slug: "adapter"
+          post_slug: "adapter"
         },
         {
           id: 15,
@@ -183,7 +183,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/224x143.jpg/cc0000/ffffff",
           post_attaboys: 55,
           total_comments: 98,
-          slug: "workforce"
+          post_slug: "workforce"
         },
         {
           id: 16,
@@ -195,7 +195,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/172x135.png/ff4444/ffffff",
           post_attaboys: 61,
           total_comments: 12,
-          slug: "logistical"
+          post_slug: "logistical"
         },
         {
           id: 17,
@@ -207,7 +207,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/185x214.bmp/cc0000/ffffff",
           post_attaboys: 10,
           total_comments: 67,
-          slug: "collaboration"
+          post_slug: "collaboration"
         },
         {
           id: 18,
@@ -219,7 +219,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/231x167.png/dddddd/000000",
           post_attaboys: 7,
           total_comments: 47,
-          slug: "Object-based"
+          post_slug: "Object-based"
         },
         {
           id: 19,
@@ -231,7 +231,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/202x149.jpg/cc0000/ffffff",
           post_attaboys: 40,
           total_comments: 98,
-          slug: "Ergonomic"
+          post_slug: "Ergonomic"
         },
         {
           id: 20,
@@ -243,7 +243,7 @@ exports.seed = function(knex) {
           images: "http://dummyimage.com/193x231.jpg/cc0000/ffffff",
           post_attaboys: 92,
           total_comments: 14,
-          slug: "client-driven"
+          post_slug: "client-driven"
         }
       ]);
     });
