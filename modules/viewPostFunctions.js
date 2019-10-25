@@ -40,20 +40,29 @@ const { db } = require("./db/dbConnection");
 //   }
 
 const getAllPostsQuery = `
-  SELECT *
-  FROM Posts
+SELECT
+posts.id AS postID,
+posts.title,
+posts.content,
+posts.post_attaboys AS total_Attaboys,
+users.username,
+attagories.attagory_name
+  FROM users
+    Join posts ON posts.post_author = users.id
+    Join attagories on attagories.id = posts.attagory_id;
 `;
 View_Indivdual_Post = `
-  SELECT*
-  FROM
-	posts.id AS postID,
-	posts.title,
-	posts.content,
-	users.username,
-	attagories.attagory_name
-		FROM users
-			Join posts ON posts.post_author = users.id
-      Join attagories on attagories.id = posts.attagory_id
+SELECT
+posts.id AS postID,
+posts.slug AS post_slug,
+posts.title,
+posts.content,
+posts.post_attaboys AS total_Attaboys,
+users.username,
+attagories.attagory_name
+  FROM users
+    Join posts ON posts.post_author = users.id
+    Join attagories on attagories.id = posts.attagory_id
       `;
 
 function viewIndividualPost (slug) {
@@ -61,14 +70,14 @@ function viewIndividualPost (slug) {
   }
 
 function renderPost (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
+  console.log('I am rendering this slug', postFromDb)
    return `
   
     <div class="card border border-secondary">
   <div class="card-body border border-primary">
-    <a href="/viewpost/${postFromDb.slug}"><h1>${postFromDb.title}</h1></a>
+    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
-    <footer class="blockquote-footer">posted by: ${postFromDb.post_author} <cite>total attaboys: ${postFromDb.post_attaboys}</cite></footer>
+    <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
   </div>
 </div>
 

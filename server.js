@@ -263,7 +263,7 @@ app.post("/signup", (req, res, nextFn) => {
 });
 
 app.get("/signup", (req, res) =>
-  res.sendFile("newUser.html", { root: __dirname })
+  res.sendFile("./templates/newUser.html", { root: __dirname })
 );
 
 //--------------------------------------\\
