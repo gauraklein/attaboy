@@ -7,7 +7,7 @@ function newPostToDB(post) {
   
   console.log(post.user)
   slug = uuidv1();
-  return db.raw("INSERT INTO posts (id, attagory_id, post_author, title, content, slug) VALUES (?, ?, ?, ?, ?)", [
+  return db.raw("INSERT INTO posts (attagory_id, post_author, title, content, slug) VALUES (?, ?, ?, ?, ?)", [
     
     post.params.attagory,
     post.user.id,
