@@ -42,6 +42,7 @@ const { db } = require("./db/dbConnection");
 const getAllPostsQuery = `
 SELECT
 posts.id AS postID,
+posts.post_slug,
 posts.title,
 posts.content,
 posts.post_attaboys AS total_Attaboys,
@@ -51,26 +52,13 @@ attagories.attagory_name
     Join posts ON posts.post_author = users.id
     Join attagories on attagories.id = posts.attagory_id;
 `;
-View_Indivdual_Post = `
-SELECT
-posts.id AS postID,
-posts.slug AS post_slug,
-posts.title,
-posts.content,
-posts.post_attaboys AS total_Attaboys,
-users.username,
-attagories.attagory_name
-  FROM users
-    Join posts ON posts.post_author = users.id
-    Join attagories on attagories.id = posts.attagory_id
-      `;
 
 function viewIndividualPost (slug) {
-    return db.raw('SELECT * FROM posts WHERE slug = ?', slug)
+    return db.raw('SELECT * FROM posts WHERE post_slug = ?', slug)
   }
 
 function renderPost (postFromDb) {
-  console.log('I am rendering this slug', postFromDb)
+  console.log('I am rendering this post:', postFromDb.title)
    return `
   
     <div class="card border border-secondary">

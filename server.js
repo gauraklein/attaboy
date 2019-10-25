@@ -132,7 +132,7 @@ app.get("/:attagory/newpost", ensureAuth, function(req, res) {
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-app.get("/viewpost/:slug", ensureAuth, function(req, res) {
+app.get("/viewpost/:slug", function(req, res) {
   // console.log(req.params.slug);
   viewIndividualPost(req.params.slug)
     .then(function(post) {
