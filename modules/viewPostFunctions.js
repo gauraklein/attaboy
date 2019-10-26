@@ -37,7 +37,14 @@ function renderSinglePost (postFromDb) {
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
     <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
-    <button>Comment</button>
+    <form action="/newComment" method="post">
+    <label>Make a comment</label>
+      <input type="text" name="comment" />
+  
+    <label>comment</label>
+      <input type="text" name="comment" />
+        <button type="submit">comment</button>
+    </form>
   </div>
 </div>
 
