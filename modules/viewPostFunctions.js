@@ -53,6 +53,9 @@ function viewIndividualPost (slug) {
   }
 
 
+
+
+
 function renderSinglePost (postFromDb) {
   console.log('I am rendering this post', postFromDb.title)
    return `
