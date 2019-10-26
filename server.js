@@ -182,7 +182,7 @@ app.post("/newComment", ensureAuth, (req, res, next) => {
   NewCommentToDB(req)
     .then(function() {
       res.send(
-        `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
+        `<h1>Comment sent! Click <a href="/home">here</a> to go back!</h1>`
       );
     })
     .catch(function(err) {
@@ -318,7 +318,7 @@ app.post("/login", (req, res, next) => {
 
 app.get("/logout", function(req, res) {
   req.logout();
-  res.redirect("/home");
+  res.redirect("/login");
 });
 
 app.get("/success", (req, res) =>
