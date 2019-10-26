@@ -3,10 +3,10 @@ const uuidv1 = require('uuidv1')
 
 
 function NewCommentToDB(comment) {
-  console.log(comment.user)
+  // console.log(comment.user)
   slug = uuidv1();
-  return db.raw("INSERT INTO comments (post_id, comment_author, content, slug) VALUES (?, ?, ?)", [
-    comment.body.value,
+  return db.raw("INSERT INTO comments (post_id, comment_author, content, slug) VALUES (?, ?, ?, ?)", [
+    comment.body.postID,
     comment.user.id,
     comment.body.content,
     slug

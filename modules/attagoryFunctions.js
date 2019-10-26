@@ -43,7 +43,7 @@ function getAttagoryID (attagorySlug) {
 }
 
 function renderAttagoryPosts (allPosts) {
-  console.log('this is the render all posts function', allPosts.rows)
+  // console.log('this is the render all posts function', allPosts.rows)
   return '<ul>' + allPosts.rows.map(renderSinglePost).join('') + '</ul>'
 }
 
@@ -53,10 +53,12 @@ function renderAttagoryPosts (allPosts) {
 // for select boxes
 
 function renderAttagoriesList (allAttagoriesList) {
-  return allAttagoriesList.map(renderIndivdualAttagoryAsOption).join('')
+  console.log('this is the render attagories as list function')
+  return allAttagoriesList.map(renderIndividualAttagoryAsOption).join('')
 }
 
 function renderIndividualAttagoryAsOption (individualAttagory) {
+  console.log('this is the render individual attagory function')
     return `
       <option value="${individualAttagory.id}">${individualAttagory.attagory_name}</option>
     `

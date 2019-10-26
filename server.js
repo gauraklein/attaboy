@@ -31,7 +31,8 @@ const {
   renderSinglePost,
   prettyPrintJSON,
   renderAllPosts,
-  getAllPosts
+  getAllPosts,
+  viewIndividualPostByID
 } = require("./modules/viewPostFunctions");
 const {
   renderAttagoryPosts,
@@ -52,6 +53,7 @@ const uuidv1 = require("uuidv1");
 const allAttagoryPage = fs.readFileSync('./templates/allAttagoryPage.mustache', 'utf8');
 const newCommentPage = fs.readFileSync("./templates/newComment.mustache", "utf8");
 const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
+const userProfilePage = fs.readFileSync('./templates/userProfile.mustache', 'utf8')
 const viewPostTemplate = fs.readFileSync(
   "./templates/viewPost.mustache",
   "utf8"
@@ -200,20 +202,37 @@ app.get("/viewpost/:slug", function(req, res) {
 
 
 //--------------------------------------\\
-//        NEW COMMENT ROUTS             \\
+//        NEW COMMENT ROUTES             \\
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
-  console.log('this is the req', req.params)
+  console.log('this is the req', req.body.postID)
+  let commentPostID = req.body.postID
   NewCommentToDB(req)
     .then(function(comment) {
-      res.send('/viewComment/' + comment.slug);
+      getIndividualPostFromComment(commentPostID)
+      .then(function(postInfo) {
+        console.log(postInfo.rows)
+        // res.send(mustache.render(viewPostTemplate, {
+        //   individualPost: renderSinglePost(postInfo.rows)
+        // }))
+  res.send('You sucessfully added a comment click <a href="/home">HERE</a> to return home!')
+
+      })
     })
     .catch(function(err) {
       console.error(err);
       res.status(500).send("Comment not sent");
     });
 });
+
+function getIndividualPostFromComment (postID) {
+
+  return db.raw(`SELECT *
+          FROM posts
+              WHERE id =?`, [postID])
+
+}
 
 app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
@@ -394,11 +413,12 @@ app.post("/attagories/addNew", function(req, res) {
 app.get('/attagories/:slug', function(req, res) {
   getAttagoryID(req.params.slug)
   .then(function(relevantAttagory) {
-    console.log(relevantAttagory.rows[0].id)
+    console.log(relevantAttagory.rows[0].attagory_name, 'this is the attagory name')
+    let attagoryName = relevantAttagory.rows[0].attagory_name.toUpperCase()
     getRelevantPosts(relevantAttagory.rows[0].id)
     .then(function(postsObject) {
-      console.log(postsObject.rows)
-      res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: renderAttagoryPosts(postsObject) }))
+      console.log(attagoryName)
+      res.send(mustache.render(ViewAttagoryPage, { attagoryName: attagoryName, allPostsHTML: renderAttagoryPosts(postsObject) }))
       .then(function() {
         console.log('done')
       })
@@ -418,6 +438,79 @@ app.get("/attagories", function(req, res) {
     
   })
 })
+
+
+//--------------------------------------\\
+//           PROFILE ROUTES             \\
+//--------------------------------------\\
+
+app.get('/users/:slug', function(req, res) {
+  // console.log(req.params.slug)
+  getUserInfoFromUserTable(req.params.slug)
+  .then(function(userData) {
+    console.log(userData.rows)
+    const profileUsername = userData.rows[0].username
+    getAllUserInfo()
+    .then(function(userJoinData) {
+      console.log(userJoinData.rows)
+      res.send(mustache.render(userProfilePage, {
+        username: profileUsername,
+        allPostsHTML: renderUserPosts(userJoinData.rows)
+      }))
+    })
+
+  })
+});
+
+// res.send('hello')
+
+function renderUserPosts (userPostArray) {
+  return '<ul>' + userPostArray.map(renderIndividualUserPost).join('') + '</ul>'
+}
+
+function renderIndividualUserPost (postFromDb) {
+  console.log('I am rendering this post', postFromDb.title)
+   return `
+    <div class="card border cardFix border-secondary">
+  <div class="card-body border border-primary">
+    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.post_title}</h2></a>
+    
+  </div>
+</div>
+
+    `
+}
+function getAllUserInfo () {
+
+  const userJoinQuery = `
+  SELECT
+	users.id,
+	users.username,
+	users.total_attaboys,
+	posts.title AS post_title,
+	posts.id AS post_id,
+	posts.post_slug,
+	comments.content AS comment_content
+	 FROM users
+	 	JOIN posts ON posts.post_author = users.id
+	 	JOIN comments ON comments.comment_author = users.id AND comments.post_id = posts.id;
+  `
+
+  return db.raw(userJoinQuery)
+}
+
+function getUserInfoFromUserTable (slug) {
+
+  const userTableQuery = `
+    SELECT *
+      FROM users
+        WHERE slug ='${slug}'
+  `;
+
+  return db.raw(userTableQuery)
+
+}
+
 
 
 
