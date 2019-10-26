@@ -48,15 +48,48 @@ function renderAttagoryPosts (allPosts) {
 
 //rendering attagories 
 
+
+// for select boxes
+
 function renderAttagoriesList (allAttagoriesList) {
-  return allAttagoriesList.map(renderIndivdualAttagory).join('')
+  return allAttagoriesList.map(renderIndivdualAttagoryAsOption).join('')
 }
 
-function renderIndivdualAttagory (individualAttagory) {
+function renderIndividualAttagoryAsOption (individualAttagory) {
     return `
       <option value="${individualAttagory.id}">${individualAttagory.attagory_name}</option>
     `
 }
+
+// for attagories page
+
+
+function renderAllAttagories (attagoryList) {
+
+  return '<ul>' + attagoryList.map(renderIndividualAttagory).join('') + '</ul>'
+
+}
+
+function renderIndividualAttagory (attagory) {
+
+  return `<li>   
+  <div class="card border border-dark cardFix">
+  <div class="card-body border border-dark">
+    <a href="/attagories/${attagory.attagory_slug}"><h2>${attagory.attagory_name}</h2></a>
+    <p class="card-text">${attagory.attagory_description}</p>
+    <footer class="blockquote-footer">Total Posts: ${attagory.total_posts}  Total Subscribers: ${attagory.total_subscriptions}</cite></footer>
+      
+    <form action="/subscribe" method="post">
+        <button type="subscribe">Subscribe</button>
+    </form>
+    
+  </div>
+</div>
+</li>`
+
+}
+
+// db query
 const getAllAttagoriesQuery = `
   SELECT *
     FROM 
@@ -73,7 +106,10 @@ module.exports = {
     getAttagoryID: getAttagoryID,
     renderAttagoryPosts: renderAttagoryPosts,
     renderAttagoriesList: renderAttagoriesList,
-    renderIndivdualAttagory: renderIndivdualAttagory,
-    getAllAttagories: getAllAttagories
+    renderIndividualAttagoryAsOption: renderIndividualAttagoryAsOption,
+    getAllAttagories: getAllAttagories,
+    renderAllAttagories: renderAllAttagories,
+    renderIndividualAttagory: renderIndividualAttagory
+
 
   }

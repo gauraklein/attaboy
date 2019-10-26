@@ -39,13 +39,17 @@ const {
   getRelevantPosts,
   newAttagoryToDB,
   renderAttagoriesList,
-  renderIndivdualAttagory,
-  getAllAttagories
+  renderIndividualAttagory,
+  renderIndividualAttagoryAsOption,
+  getAllAttagories,
+  renderAllAttagories,
+
 } = require("./modules/attagoryFunctions");
 const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
+const allAttagoryPage = fs.readFileSync('./templates/allAttagoryPage.mustache', 'utf8');
 const newCommentPage = fs.readFileSync("./templates/newComment.mustache", "utf8");
 const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
 const viewPostTemplate = fs.readFileSync(
@@ -384,10 +388,9 @@ app.post("/attagories/addNew", function(req, res) {
 });
 
 
-//View Attagory
+//View individual Attagory
 
 app.get("/attagories/:slug", function(req, res) {
-
   getAttagoryID(req.params.slug)
     .then(function(attagory) {
       console.log("this is the attagory id", attagory.rows[0].id);
@@ -405,7 +408,25 @@ app.get("/attagories/:slug", function(req, res) {
     });
 });
 
+//view all attagories
+
+app.get("/attagories", function(req, res) {
+  getAllAttagories()
+  .then(function(attagoryList) {
+    console.log(attagoryList.rows)
+    res.send(mustache.render(allAttagoryPage, {
+      allAttagoryList: renderAllAttagories(attagoryList.rows)
+    }))
+    
+  })
+})
+
+
+
+
+
 
 app.listen(port, () => {
   log.info("Listening on port " + port + " 🎉🎉🎉");
 });
+

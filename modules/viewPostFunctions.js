@@ -34,7 +34,7 @@ function renderListPosts (postFromDb) {
 function renderSinglePost (postFromDb) {
   console.log('I am rendering this post', postFromDb.title)
    return `
-    <div class="card border border-secondary">
+    <div class="card border cardFix border-secondary">
   <div class="card-body border border-primary">
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
