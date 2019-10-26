@@ -108,15 +108,15 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
-<<<<<<< HEAD
+
 const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
 const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
-=======
-const homepageTemplate = fs.readFileSync(
-  "./templates/homepage.mustache",
-  "utf8"
-);
->>>>>>> b7e6760bb178e808390eaf8693dfac9b304fe2a7
+
+// const homepageTemplate = fs.readFileSync(
+//   "./templates/homepage.mustache",
+//   "utf8"
+// );
+
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
