@@ -108,15 +108,8 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
-
 const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
 const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
-
-// const homepageTemplate = fs.readFileSync(
-//   "./templates/homepage.mustache",
-//   "utf8"
-// );
-
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -185,6 +178,7 @@ app.get("/viewpost/:slug", function(req, res) {
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
+  console.log('this is the req', req.body)
   NewCommentToDB(req)
     .then(function() {
       res.send(
@@ -201,6 +195,7 @@ app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
   res.send(mustache.render(newCommentPage)); //has the submit form
 });
+
 //--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
