@@ -1,9 +1,7 @@
 const { db } = require("./db/dbConnection");
 const getAllCommentsQuery = `
-SELECT*
-From
-comments
-
+  SELECT *
+  FROM Comments
 `;
 
 function viewIndividualComment (slug) {
