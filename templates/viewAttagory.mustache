@@ -5,11 +5,18 @@
   <title>Attagory View</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+  <link rel="stylesheet" href="/tblocker/signUpTempCSS.css" />
+  <link rel="stylesheet" href="/border.css" />
+
 </head>
 
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="/home">Attaboy!</a>
       <button
@@ -34,7 +41,7 @@
             <a class="nav-link" href="/attagories">Attagories</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">My Profile</a>
+            <a class="nav-link" href="/users/{{{userRoute}}}">My Profile</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/logout">Logout</a>
@@ -43,8 +50,7 @@
       </div>
     </nav>
 
-
-  <h1>Attagory view</h1>
+  <h1>{{{attagoryName}}}</h1>
   <main>{{{allPostsHTML}}}</main>
  
 

@@ -13,6 +13,66 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { emailIsValid } = require("./modules/authentication/newUser.js");
 
+
+
+//Modules
+const log = require("./modules/logging.js");
+const mustache = require("mustache");
+const { NewCommentToDB } = require("./modules/newCommentFunctions.js");
+const { newPostToDB } = require("./modules/newPostFunctions.js");
+const {
+  viewIndividualComment,
+      renderComment,
+      renderAllComments,
+      getAllComments
+} = require("./modules/viewCommentFunctions");
+const {
+  viewIndividualPost,
+  renderSinglePost,
+  prettyPrintJSON,
+  renderAllPosts,
+  getAllPosts,
+  viewIndividualPostByID
+} = require("./modules/viewPostFunctions");
+const {
+  renderAttagoryPosts,
+  getAttagoryID,
+  getRelevantPosts,
+  newAttagoryToDB,
+  renderAttagoriesList,
+  renderIndividualAttagory,
+  renderIndividualAttagoryAsOption,
+  getAllAttagories,
+  renderAllAttagories,
+
+} = require("./modules/attagoryFunctions");
+const { addUser } = require("./modules/authentication/newUser.js");
+const uuidv1 = require("uuidv1");
+
+//Templating
+const allAttagoryPage = fs.readFileSync('./templates/allAttagoryPage.mustache', 'utf8');
+const newCommentPage = fs.readFileSync("./templates/newComment.mustache", "utf8");
+const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
+const userProfilePage = fs.readFileSync('./templates/userProfile.mustache', 'utf8')
+const viewPostTemplate = fs.readFileSync(
+  "./templates/viewPost.mustache",
+  "utf8"
+);
+const newAttagoryPage = fs.readFileSync(
+  "./templates/newAttagory.mustache",
+  "utf8"
+);
+const ViewAttagoryPage = fs.readFileSync(
+  "./templates/viewAttagory.mustache",
+  "utf8"
+);
+const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
+const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
+
+//--------------------------------------\\
+//               PASSPORT               \\
+//--------------------------------------\\
+
 passport.use(
   new LocalStrategy((username, password, done) => {
     console.log("got auth request");
@@ -66,50 +126,6 @@ passport.deserializeUser(function(id, done) {
     .catch(error => done(error, false));
 });
 
-//Modules
-const log = require("./modules/logging.js");
-const mustache = require("mustache");
-const { NewCommentToDB } = require("./modules/newCommentFunctions.js");
-const { newPostToDB } = require("./modules/newPostFunctions.js");
-const {
-  viewIndividualComment,
-      renderComment,
-      renderAllComments,
-      getAllComments
-} = require("./modules/viewCommentFunctions");
-const {
-  viewIndividualPost,
-  renderSinglePost,
-  prettyPrintJSON,
-  renderAllPosts,
-  getAllPosts
-} = require("./modules/viewPostFunctions");
-const {
-  renderAttagoryPosts,
-  getAttagoryID,
-  getRelevantPosts,
-  newAttagoryToDB
-} = require("./modules/attagoryFunctions");
-const { addUser } = require("./modules/authentication/newUser.js");
-const uuidv1 = require("uuidv1");
-
-//Templating
-const newCommentPage = fs.readFileSync("./templates/newComment.mustache", "utf8");
-const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
-const viewPostTemplate = fs.readFileSync(
-  "./templates/viewPost.mustache",
-  "utf8"
-);
-const newAttagoryPage = fs.readFileSync(
-  "./templates/newAttagory.mustache",
-  "utf8"
-);
-const ViewAttagoryPage = fs.readFileSync(
-  "./templates/viewAttagory.mustache",
-  "utf8"
-);
-const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
-const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -131,11 +147,42 @@ app.post("/:attagory/newpost", ensureAuth, (req, res, next) => {
     });
 });
 
+app.post("/newpost", ensureAuth, (req, res, next) => {
+  console.log('this is the post', req.params)
+  newPostToDB(req) //adds post
+    .then(function() {
+      res.send(
+        `<h1>You submitted a post! Click <a href="/newpost">here</a> to submit another!</h1>`
+      );
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("you did not submit a post");
+    });
+});
+
+app.get("/newpost", ensureAuth, function(req, res) {
+  console.log('this is the get', req.body)
+  let homePageusername = req.user.slug
+  getAllAttagories()
+  .then(function(allAttagories) {
+      console.log(allAttagories, 'these are the attagories')
+    res.send(
+      mustache.render(newPostPage, {
+        allAttagoriesHTML: renderAttagoriesList(allAttagories.rows),
+        userRoute: homePageusername
+      })
+    )
+  })
+});
+
+
 app.get("/:attagory/newpost", ensureAuth, function(req, res) {
   console.log('this is the get', req.params)
   // console.log(req.user);
   res.send(mustache.render(newPostPage)); //has the submit form
 });
+
 
 //--------------------------------------\\
 //          VIEW POST ROUTES            \\
@@ -143,6 +190,7 @@ app.get("/:attagory/newpost", ensureAuth, function(req, res) {
 
 app.get("/viewpost/:slug", function(req, res) {
   // console.log(req.params.slug);
+  let homePageusername = req.user.slug
   viewIndividualPost(req.params.slug)
     .then(function(post) {
       var postid = post.rows[0].id;
@@ -158,35 +206,25 @@ app.get("/viewpost/:slug", function(req, res) {
     });
 });
 
-// app.post("/posts", function(req, res) {
-//   createposts(req.body)
-//     .then(function() {
-//       res.send(mustache.render(homepageTemplate));
-//     })
-//     .catch(function() {
-//       res.status(500).send("something went wrong");
-//     });
-// });
-// app.post("/posts/:slug", function(req, res) {
-//   // console.log("post attempted");
-//   // console.log(req.params);
-//   viewIndividualPost(req.params.slug).then(function(posts) {
-//     // console.log(posts);
-//     res.send("this worked");
-//   });
-// });
 
 //--------------------------------------\\
-//        NEW COMMENT ROUTS             \\
+//        NEW COMMENT ROUTES             \\
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
-  console.log('this is the req', req.body)
+  console.log('this is the req', req.body.postID)
+  let commentPostID = req.body.postID
   NewCommentToDB(req)
-    .then(function() {
-      res.send(
-        `<h1>Comment sent! Click <a href="/home">here</a> to go back!</h1>`
-      );
+    .then(function(comment) {
+      getIndividualPostFromComment(commentPostID)
+      .then(function(postInfo) {
+        console.log(postInfo.rows)
+        // res.send(mustache.render(viewPostTemplate, {
+        //   individualPost: renderSinglePost(postInfo.rows)
+        // }))
+  res.send('You sucessfully added a comment click <a href="/home">HERE</a> to return home!')
+
+      })
     })
     .catch(function(err) {
       console.error(err);
@@ -194,16 +232,29 @@ app.post("/newComment", ensureAuth, (req, res, next) => {
     });
 });
 
+function getIndividualPostFromComment (postID) {
+
+  return db.raw(`SELECT *
+          FROM posts
+              WHERE id =?`, [postID])
+
+}
+
 app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
-  res.send(mustache.render(newCommentPage)); //has the submit form
+  let homePageusername = req.user.slug
+  res.send(mustache.render(newCommentPage, {
+    userRoute: homePageusername
+  })); //has the submit form
 });
 
 //--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
 app.get("/viewComment/:slug", ensureAuth, function(req, res) {
+  let homePageusername = req.user.slug
   viewIndividualComment(req.params.slug)
+
     .then(function(comment) {
       // console.log("this is the request slug", req.params.slug);
 
@@ -233,19 +284,24 @@ app.post("/comments/:slug", function(req, res) {
 });
 
 //--------------------------------------\\
-//     RENDERING POST TO HOME PAGE      \\
+//     RENDERING POSTS TO HOME PAGE      \\
 //--------------------------------------\\
 
-app.get("/home", function(req, res) {
-  getAllPosts(req.body).then(function(allPosts) {
-    // console.debug(allPosts);
+app.get("/home", ensureAuth, function(req, res) {
+  let homePageusername = req.user.slug
+
+  getAllPosts(req.body)
+  .then(function(allPosts) {
+    // console.debug(allPosts.user);
     res.send(
       mustache.render(homepageTemplate, {
-        PostsListHTML: renderAllPosts(allPosts.rows)
+        PostsListHTML: renderAllPosts(allPosts.rows),
+        userRoute: homePageusername
       })
     );
   });
 });
+
 app.get("/Commenthome", function(req, res) {
   getAllComments(req.body).then(function(allcomments) {
     // console.debug(allPosts);
@@ -346,7 +402,10 @@ function ensureAuth(req, res, next) {
 // add new Attagory
 
 app.get("/attagories/addNew", function(req, res) {
-  res.send(mustache.render(newAttagoryPage)); //has the submit form
+  let homePageusername = req.user.slug
+  res.send(mustache.render(newAttagoryPage, {
+    userRoute: homePageusername
+  })); //has the submit form
 });
 
 
@@ -366,27 +425,148 @@ app.post("/attagories/addNew", function(req, res) {
 });
 
 
-//View Attagory
+//View individual Attagory
 
-app.get("/attagories/:slug", function(req, res) {
+
+app.get('/attagories/:slug', function(req, res) {
+  let homePageusername = req.user.slug  
   getAttagoryID(req.params.slug)
-    .then(function(attagory) {
-      console.log("this is the attagory id", attagory.rows[0].id);
-      getRelevantPosts(attagory.rows[0].id).then(function(postsObject) {
-        console.log("this is the number of posts", postsObject.rows.length);
-        var postHTML = renderAttagoryPosts(postsObject.rows);
-        // console.log("these are all the posts", postHTML);
-        res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: postHTML }));
-      });
+  .then(function(relevantAttagory) {
+    console.log(relevantAttagory.rows[0].attagory_name, 'this is the attagory name')
+    let attagoryName = relevantAttagory.rows[0].attagory_name.toUpperCase()
+    getRelevantPosts(relevantAttagory.rows[0].id)
+    .then(function(postsObject) {
+      console.log(attagoryName)
+      res.send(mustache.render(ViewAttagoryPage, { attagoryName: attagoryName, allPostsHTML: renderAttagoryPosts(postsObject), userRoute: homePageusername }))
+      .then(function() {
+        console.log('done')
+      })
     })
-    .catch(function(err) {
-      console.error(err);
-    });
+  })
+})
+
+//view all attagories
+
+app.get("/attagories", function(req, res) {
+  let homePageusername = req.user.slug
+  getAllAttagories()
+  .then(function(attagoryList) {
+    console.log(attagoryList.rows)
+    res.send(mustache.render(allAttagoryPage, {
+      allAttagoryList: renderAllAttagories(attagoryList.rows),
+      userRoute: homePageusername
+    }))
+    
+  })
+})
+
+
+//--------------------------------------\\
+//           PROFILE ROUTES             \\
+//--------------------------------------\\
+
+app.get('/users/:slug', function(req, res) {
+  // console.log(req.params.slug)
+  let homePageusername = req.user.slug
+  getUserInfoFromUserTable(req.params.slug)
+  .then(function(userData) {
+    console.log(userData.rows)
+    const profileUsername = userData.rows[0].username
+    getAllUserInfo()
+    .then(function(userJoinData) {
+      console.log(userJoinData.rows)
+      res.send(mustache.render(userProfilePage, {
+        username: profileUsername,
+        allPostsHTML: renderUserPosts(userJoinData.rows),
+        allCommentsHTML: renderUserComments(userJoinData.rows),
+        userRoute: homePageusername
+      }))
+    })
+
+  })
 });
+
+// res.send('hello')
+
+function renderUserPosts (userPostArray) {
+  return '<ul>' + userPostArray.map(renderIndividualUserPost).join('') + '</ul>'
+}
+
+function renderUserComments (userPostArray) {
+  return '<ul>' + userPostArray.map(renderIndividualUserComments).join('') + '</ul>'
+}
+
+function renderIndividualUserComments (postFromDb) {
+  console.log('I am rendering this comment', postFromDb.comment_id)
+   return `
+    <div class="card border cardFix border-secondary">
+  <div class="card-body border border-primary">
+    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.post_title}</h2></a>
+    <p class="card-text"><strong>Comment:&nbsp;</strong>${postFromDb.comment_content}</p>
+    
+  </div>
+</div>
+
+    `
+}
+
+function renderIndividualUserPost (postFromDb) {
+  console.log('I am rendering this post', postFromDb.title)
+   return `
+    <div class="card border cardFix border-secondary">
+  <div class="card-body border border-primary">
+    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.post_title}</h2></a>
+    
+  </div>
+</div>
+
+    `
+}
+function getAllUserInfo () {
+
+  const userJoinQuery = `
+  SELECT
+	users.id,
+	users.username,
+	users.total_attaboys,
+	posts.title AS post_title,
+	posts.id AS post_id,
+	posts.post_slug,
+	comments.id AS comment_id,
+	comments.content AS comment_content
+	 FROM users
+	 	JOIN posts ON posts.post_author = users.id
+	 	JOIN comments ON comments.comment_author = users.id AND comments.post_id = posts.id;
+  `
+
+  return db.raw(userJoinQuery)
+}
+
+function getUserInfoFromUserTable (slug) {
+
+  const userTableQuery = `
+    SELECT *
+      FROM users
+        WHERE slug ='${slug}'
+  `;
+
+  return db.raw(userTableQuery)
+
+}
+
+
+
+
+
+
+
 app.listen(port, () => {
   log.info("Listening on port " + port + " 🎉🎉🎉");
 });
 
+<<<<<<< HEAD
 function getCommentsByPost(postid) {
   return db.raw('SELECT * FROM comments WHERE post_id = ?', [postid])
 }
+=======
+>>>>>>> d3a541b54c6af23757b034e0b24e965e251f2ff6
