@@ -1,22 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD:templates/newUser.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/tblocker/signUpTempCSS.css">
-=======
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="/tblocker/signUpTempCSS.css" />
->>>>>>> a4167661f60d16ca7df1389b07e54ff74ab87d06:newUser.html
 
     <!-- Bootstrap CSS -->
     <link
@@ -52,16 +41,18 @@
             <a class="nav-link" href="/attagories">Attagories</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">My Profile</a>
+            <a class="nav-link" href="/users/{{{userRoute}}}">My Profile</a>
           </li>
-          <li class="nav-item">Logout</a>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
           </li>
         </ul>
       </div>
     </nav>
+
     <h1>Sign up for your Attaboy Account!</h1>
     <div class="d-flex d-flex justify-content-center vh-100">
-      <div id="form_container">
+      
         <form id="sign_up_form" action="/signup" method="post">
           <div>
             <label>Username:</label>
@@ -82,7 +73,7 @@
             <input type="submit" value="Submit" />
           </div>
         </form>
-      </div>
+      
     </div>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
