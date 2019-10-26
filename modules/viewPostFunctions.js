@@ -34,6 +34,37 @@ function viewIndividualPost (slug) {
         WHERE post_slug = ?`, [slug])
   }
 
+
+
+function renderSinglePost (postFromDb, comments) {
+
+  var commentsHTML = comments.map((comment) => {
+    return `<div>${comment.content}</div>`;
+  });
+
+  console.log('I am rendering this post', postFromDb.postid)
+   return `
+   <div class="card border cardFix border-secondary">
+   <div class="card-body border border-primary">
+     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
+     <p class="card-text">${postFromDb.content}</p>
+     <footer class="blockquote-footer">Posted by: <a href="/users/${postFromDb.user_slug}">${postFromDb.username}</a> Posted in: <a href="/attagories/${postFromDb.attagory_slug}">${postFromDb.attagory_name}</a> <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+       
+          <hr>
+          <h3>Comments</h3>
+            ${commentsHTML.join("")}
+          <hr>
+          <form action="/newComment" method="post">
+            <label>Comment:</label>
+            <input type="text" name="content" />
+            <input type="hidden" name="postid" value="${postFromDb.postid}">
+            <button type="submit">Submit</button>
+          </form>
+          </div>
+          </div>
+          
+              `
+
   function viewIndividualPostByID (postID) {
     console.log('this is the individual post function', postID)
     return db.raw(`SELECT
@@ -56,27 +87,8 @@ function viewIndividualPost (slug) {
 
 
 
-function renderSinglePost (postFromDb) {
-  // console.log('I am rendering this post', postFromDb.title)
-   return `
-    <div class="card border cardFix border-secondary">
-  <div class="card-body border border-primary">
-    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
-    <p class="card-text">${postFromDb.content}</p>
-    <footer class="blockquote-footer">Posted by: <a href="/users/${postFromDb.user_slug}">${postFromDb.username}</a> Posted in: <a href="/attagories/${postFromDb.attagory_slug}">${postFromDb.attagory_name}</a> <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
-      
-    <form action="/newComment" method="post">
-    <input type="hidden" id="postID" name="postID" value="${postFromDb.postid}">
-    <label>Comment:</label>
-      <input type="text" name="content" />
-        <button type="submit">Submit</button>
-    </form>
-    
-  </div>
-</div>
 
-    `
-}
+    
 
 function getAllPosts() {
   return db.raw(getAllPostsQuery);
@@ -101,4 +113,4 @@ function renderAllPosts(allPosts) {
   }
 
 
-  // view individual post query
+}

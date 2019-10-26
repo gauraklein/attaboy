@@ -193,9 +193,12 @@ app.get("/viewpost/:slug", function(req, res) {
   let homePageusername = req.user.slug
   viewIndividualPost(req.params.slug)
     .then(function(post) {
-      // console.log("this is the request slug", req.params.slug);
-      // console.log(post);
-      res.send(renderSinglePost(post.rows[0]));
+      var postid = post.rows[0].id;
+      getCommentsByPost(postid)
+        .then(function(data) {
+          var comments = data.rows;
+          res.send(renderSinglePost(post.rows[0], comments));
+        })
     })
     .catch(function(err) {
       // console.error(err);
@@ -561,3 +564,9 @@ app.listen(port, () => {
   log.info("Listening on port " + port + " 🎉🎉🎉");
 });
 
+<<<<<<< HEAD
+function getCommentsByPost(postid) {
+  return db.raw('SELECT * FROM comments WHERE post_id = ?', [postid])
+}
+=======
+>>>>>>> d3a541b54c6af23757b034e0b24e965e251f2ff6
