@@ -2,16 +2,18 @@ const { db } = require("./db/dbConnection");
 
 const getAllPostsQuery = `
 SELECT
-posts.id AS postID,
-posts.post_slug,
-posts.title,
-posts.content,
-posts.post_attaboys AS total_Attaboys,
-users.username,
-attagories.attagory_name
-  FROM users
-    Join posts ON posts.post_author = users.id
-    Join attagories on attagories.id = posts.attagory_id;
+	posts.id AS postID,
+	posts.post_slug,
+	posts.title,
+	posts.content,
+	posts.post_attaboys AS total_Attaboys,
+	users.username,
+	users.slug AS user_slug,
+	attagories.attagory_name,
+	attagories.slug AS attagory_slug
+		FROM users
+			Join posts ON posts.post_author = users.id
+			Join attagories on attagories.id = posts.attagory_id;
 `;
 
 
@@ -36,10 +38,10 @@ function renderSinglePost (postFromDb) {
   <div class="card-body border border-primary">
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
-    <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+    <footer class="blockquote-footer">Posted by: <a href="/users/${postFromDb.user_slug}">${postFromDb.username}</a> Posted in: <a href="/attagories/${postFromDb.attagory_slug}">${postFromDb.attagory_name}</a> <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
       
     <form action="/newComment" method="post">
-    <label>Content:</label>
+    <label value="${postFromDb.postid}">Content:</label>
       <input type="text" name="content" />
         <button type="submit">Submit</button>
     </form>
@@ -66,7 +68,7 @@ function renderAllPosts(allPosts) {
       renderSinglePost: renderSinglePost,
       prettyPrintJSON: prettyPrintJSON,
       renderAllPosts: renderAllPosts,
-      getAllPosts:getAllPosts
+      getAllPosts: getAllPosts
 
   }
 
