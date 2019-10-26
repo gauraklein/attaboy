@@ -1,58 +1,72 @@
 const { db } = require("./db/dbConnection");
-const {
-  viewIndividualComment,
-      renderComment,
-      renderAllComments,
-      getAllComments
-} = require("./modules/viewCommentFunctions");
+
 const getAllPostsQuery = `
 SELECT
-posts.id AS postID,
-posts.post_slug,
-posts.title,
-posts.content,
-posts.post_attaboys AS total_Attaboys,
-users.username,
-attagories.attagory_name
-  FROM users
-    Join posts ON posts.post_author = users.id
-    Join attagories on attagories.id = posts.attagory_id;
+	posts.id AS postID,
+	posts.post_slug,
+	posts.title,
+	posts.content,
+	posts.post_attaboys AS total_Attaboys,
+	users.username,
+	users.slug AS user_slug,
+	attagories.attagory_name,
+	attagories.slug AS attagory_slug
+		FROM users
+			Join posts ON posts.post_author = users.id
+			Join attagories on attagories.id = posts.attagory_id;
 `;
 
 
 function viewIndividualPost (slug) {
-    return db.raw('SELECT * FROM posts WHERE post_slug = ?', [slug])
+    return db.raw(`SELECT
+    posts.id AS postID,
+    posts.post_slug,
+    posts.title,
+    posts.content,
+    posts.post_attaboys AS total_attaboys,
+    users.username,
+    users.slug AS user_slug,
+    attagories.attagory_name,
+    attagories.slug AS attagory_slug
+      FROM users
+        Join posts ON posts.post_author = users.id
+        Join attagories on attagories.id = posts.attagory_id
+        WHERE post_slug = ?`, [slug])
   }
 
-function renderListPosts (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
-   return `
-    <a href="/viewpost/${postFromDb.slug}"><h1>${postFromDb.title}</h1></a>
-    <h4>${postFromDb.content}</h4>
-    <p>posted by: ${postFromDb.post_author}</p>
-    <p>total attaboys: ${postFromDb.post_attaboys}</p>
-    `
-}
-function renderComment (commentFromDb) {
-  console.log('I am rendering this comment', commentFromDb.title)
-   return `
-    <p>${commentFromDb.content}</p>
-    <p>posted by: ${commentFromDb.post_author}</p>
-    <p>total attaboys: ${commentFromDb.post_attaboys}</p>
-    
-    
-    `
-}
+  function viewIndividualPostByID (postID) {
+    console.log('this is the individual post function', postID)
+    return db.raw(`SELECT
+    posts.id AS postID,
+    posts.post_slug,
+    posts.title,
+    posts.content,
+    posts.post_attaboys AS total_attaboys,
+    users.username,
+    users.slug AS user_slug,
+    attagories.attagory_name,
+    attagories.slug AS attagory_slug
+      FROM users
+        Join posts ON posts.post_author = users.id
+        Join attagories on attagories.id = posts.attagory_id`)
+
+  }
+
+
+
+
+
 function renderSinglePost (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
+  // console.log('I am rendering this post', postFromDb.title)
    return `
-    <div class="card border border-secondary">
+    <div class="card border cardFix border-secondary">
   <div class="card-body border border-primary">
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
-    <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+    <footer class="blockquote-footer">Posted by: <a href="/users/${postFromDb.user_slug}">${postFromDb.username}</a> Posted in: <a href="/attagories/${postFromDb.attagory_slug}">${postFromDb.attagory_name}</a> <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
       
     <form action="/newComment" method="post">
+    <input type="hidden" id="postID" name="postID" value="${postFromDb.postid}">
     <label>Comment:</label>
       <input type="text" name="content" />
         <button type="submit">Submit</button>
@@ -63,6 +77,7 @@ function renderSinglePost (postFromDb) {
 
     `
 }
+
 function getAllPosts() {
   return db.raw(getAllPostsQuery);
 }
@@ -80,7 +95,8 @@ function renderAllPosts(allPosts) {
       renderSinglePost: renderSinglePost,
       prettyPrintJSON: prettyPrintJSON,
       renderAllPosts: renderAllPosts,
-      getAllPosts:getAllPosts
+      getAllPosts: getAllPosts,
+      viewIndividualPostByID: viewIndividualPostByID
 
   }
 
