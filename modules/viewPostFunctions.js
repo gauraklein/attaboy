@@ -37,7 +37,13 @@ function renderSinglePost (postFromDb) {
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
     <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
-    <button>Comment</button>
+      
+    <form action="/newComment" method="post">
+    <label>Content:</label>
+      <input type="text" name="content" />
+        <button type="submit">Submit</button>
+    </form>
+    
   </div>
 </div>
 
@@ -48,7 +54,7 @@ function getAllPosts() {
 }
 
 function renderAllPosts(allPosts) {
-  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderSinglePost).join('') + '</ul></form>'
+  return '<ul>' + allPosts.map(renderSinglePost).join('') + '</ul>'
 }
 
   function prettyPrintJSON (x) {

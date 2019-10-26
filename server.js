@@ -178,6 +178,7 @@ app.get("/viewpost/:slug", function(req, res) {
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
+  console.log('this is the req', req.body)
   NewCommentToDB(req)
     .then(function() {
       res.send(
@@ -194,6 +195,7 @@ app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
   res.send(mustache.render(newCommentPage)); //has the submit form
 });
+
 //--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
