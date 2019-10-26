@@ -1,10 +1,5 @@
 const { db } = require("./db/dbConnection");
-const {
-  viewIndividualComment,
-      renderComment,
-      renderAllComments,
-      getAllComments
-} = require("./modules/viewCommentFunctions");
+
 const getAllPostsQuery = `
 SELECT
 posts.id AS postID,
@@ -17,6 +12,7 @@ attagories.attagory_name
   FROM users
     Join posts ON posts.post_author = users.id
     Join attagories on attagories.id = posts.attagory_id;
+    
 `;
 
 
@@ -33,31 +29,33 @@ function renderListPosts (postFromDb) {
     <p>total attaboys: ${postFromDb.post_attaboys}</p>
     `
 }
-function renderComment (commentFromDb) {
-  console.log('I am rendering this comment', commentFromDb.title)
-   return `
-    <p>${commentFromDb.content}</p>
-    <p>posted by: ${commentFromDb.post_author}</p>
-    <p>total attaboys: ${commentFromDb.post_attaboys}</p>
-    
-    
-    `
-}
-function renderSinglePost (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
+
+function renderSinglePost (postFromDb, comments) {
+
+  var commentsHTML = comments.map((comment) => {
+    return `<div>${comment.content}</div>`;
+  });
+
+  console.log('I am rendering this post', postFromDb.postid)
    return `
     <div class="card border border-secondary">
-  <div class="card-body border border-primary">
-    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
-    <p class="card-text">${postFromDb.content}</p>
-    <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
-      
-    <form action="/newComment" method="post">
-    <label>Comment:</label>
-      <input type="text" name="content" />
-        <button type="submit">Submit</button>
-    </form>
-    
+      <div class="card-body border border-primary">
+          <a href="/viewpost/${postFromDb.post_slug}">
+            <h2>${postFromDb.title}</h2>
+          </a>
+          <p class="card-text">${postFromDb.content}</p>
+          <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+
+          <hr>
+          <h3>Comments</h3>
+            ${commentsHTML.join("")}
+          <hr>
+          <form action="/newComment" method="post">
+            <label>Comment:</label>
+            <input type="text" name="content" />
+            <input type="hidden" name="postid" value="${postFromDb.postid}">
+            <button type="submit">Submit</button>
+          </form>
   </div>
 </div>
 
