@@ -34,7 +34,8 @@ function getRelevantPosts (attagoryID) {
 }
 
 function getAttagoryID (attagorySlug) {
-  console.log('getting attagory from DB')
+  
+  console.log('getAttagoryID function')
   return db.raw(`
   SELECT *
   FROM attagories
@@ -75,7 +76,7 @@ function renderIndividualAttagory (attagory) {
   return `<li>   
   <div class="card border border-dark cardFix">
   <div class="card-body border border-dark">
-    <a href="/attagories/${attagory.attagory_slug}"><h2>${attagory.attagory_name}</h2></a>
+    <a href="/attagories/${attagory.slug}"><h2>${attagory.attagory_name}</h2></a>
     <p class="card-text">${attagory.attagory_description}</p>
     <footer class="blockquote-footer">Total Posts: ${attagory.total_posts}  Total Subscribers: ${attagory.total_subscriptions}</cite></footer>
       
