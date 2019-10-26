@@ -390,25 +390,21 @@ app.post("/attagories/addNew", function(req, res) {
 
 //View individual Attagory
 
-app.get("/attagories/:slug", function(req, res) {
+
+app.get('/attagories/:slug', function(req, res) {
   getAttagoryID(req.params.slug)
-    .then(function(attagory) {
-      console.log("this is the attagory id", attagory.rows[0]);
-      getRelevantPosts(attagory.rows[0].id).then(function(postsObject) {
-        // console.log("this is the number of posts", postsObject.rows);
-        // console.log("these are all the posts", postHTML);
-        // let postsHTML = renderAttagoryPosts(postsObject)
-        // console.log(postsHTML)
-        res.send(
-          // 'yayayayyaya'
-          mustache.render(ViewAttagoryPage, { allPostsHTML: 'hello' })
-          );
-      });
+  .then(function(relevantAttagory) {
+    console.log(relevantAttagory.rows[0].id)
+    getRelevantPosts(relevantAttagory.rows[0].id)
+    .then(function(postsObject) {
+      console.log(postsObject.rows)
+      res.send(mustache.render(ViewAttagoryPage, { allPostsHTML: renderAttagoryPosts(postsObject) }))
+      .then(function() {
+        console.log('done')
+      })
     })
-    .catch(function(err) {
-      console.error(err);
-    });
-});
+  })
+})
 
 //view all attagories
 

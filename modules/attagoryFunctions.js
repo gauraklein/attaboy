@@ -28,7 +28,7 @@ function getRelevantPosts (attagoryID) {
 		FROM users
 			Join posts ON posts.post_author = users.id
 			Join attagories on attagories.id = posts.attagory_id
-  WHERE attagory_id = ${attagoryID};
+  WHERE attagory_id =${attagoryID};
 `
   return db.raw(getRelevantPostsQuery)
 }
@@ -43,8 +43,8 @@ function getAttagoryID (attagorySlug) {
 }
 
 function renderAttagoryPosts (allPosts) {
-  console.log('this is the render all posts function')
-  return '<ul>' + allPosts.map(renderSinglePost).join('') + '</ul>'
+  console.log('this is the render all posts function', allPosts.rows)
+  return '<ul>' + allPosts.rows.map(renderSinglePost).join('') + '</ul>'
 }
 
 //rendering attagories 
