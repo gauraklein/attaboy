@@ -108,10 +108,8 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
-const homepageTemplate = fs.readFileSync(
-  "./templates/homepage.mustache",
-  "utf8"
-);
+const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
+const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -180,10 +178,11 @@ app.get("/viewpost/:slug", function(req, res) {
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
+  console.log('this is the req', req.body)
   NewCommentToDB(req)
     .then(function() {
       res.send(
-        `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
+        `<h1>Comment sent! Click <a href="/home">here</a> to go back!</h1>`
       );
     })
     .catch(function(err) {
@@ -196,6 +195,7 @@ app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
   res.send(mustache.render(newCommentPage)); //has the submit form
 });
+
 //--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
@@ -318,7 +318,7 @@ app.post("/login", (req, res, next) => {
 
 app.get("/logout", function(req, res) {
   req.logout();
-  res.redirect("/home");
+  res.redirect("/login");
 });
 
 app.get("/success", (req, res) =>

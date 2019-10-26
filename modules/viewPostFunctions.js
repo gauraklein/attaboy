@@ -1,5 +1,10 @@
 const { db } = require("./db/dbConnection");
-
+const {
+  viewIndividualComment,
+      renderComment,
+      renderAllComments,
+      getAllComments
+} = require("./modules/viewCommentFunctions");
 const getAllPostsQuery = `
 SELECT
 posts.id AS postID,
@@ -28,7 +33,16 @@ function renderListPosts (postFromDb) {
     <p>total attaboys: ${postFromDb.post_attaboys}</p>
     `
 }
-
+function renderComment (commentFromDb) {
+  console.log('I am rendering this comment', commentFromDb.title)
+   return `
+    <p>${commentFromDb.content}</p>
+    <p>posted by: ${commentFromDb.post_author}</p>
+    <p>total attaboys: ${commentFromDb.post_attaboys}</p>
+    
+    
+    `
+}
 function renderSinglePost (postFromDb) {
   console.log('I am rendering this post', postFromDb.title)
    return `
@@ -37,14 +51,13 @@ function renderSinglePost (postFromDb) {
     <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
     <p class="card-text">${postFromDb.content}</p>
     <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+      
     <form action="/newComment" method="post">
-    <label>Make a comment</label>
-      <input type="text" name="comment" />
-  
-    <label>comment</label>
-      <input type="text" name="comment" />
-        <button type="submit">comment</button>
+    <label>Comment:</label>
+      <input type="text" name="content" />
+        <button type="submit">Submit</button>
     </form>
+    
   </div>
 </div>
 
@@ -55,7 +68,7 @@ function getAllPosts() {
 }
 
 function renderAllPosts(allPosts) {
-  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderSinglePost).join('') + '</ul></form>'
+  return '<ul>' + allPosts.map(renderSinglePost).join('') + '</ul>'
 }
 
   function prettyPrintJSON (x) {
