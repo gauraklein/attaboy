@@ -163,12 +163,14 @@ app.post("/newpost", ensureAuth, (req, res, next) => {
 
 app.get("/newpost", ensureAuth, function(req, res) {
   console.log('this is the get', req.body)
+  let homePageusername = req.user.slug
   getAllAttagories()
   .then(function(allAttagories) {
       console.log(allAttagories, 'these are the attagories')
     res.send(
       mustache.render(newPostPage, {
-        allAttagoriesHTML: renderAttagoriesList(allAttagories.rows)
+        allAttagoriesHTML: renderAttagoriesList(allAttagories.rows),
+        userRoute: homePageusername
       })
     )
   })
@@ -188,6 +190,7 @@ app.get("/:attagory/newpost", ensureAuth, function(req, res) {
 
 app.get("/viewpost/:slug", function(req, res) {
   // console.log(req.params.slug);
+  let homePageusername = req.user.slug
   viewIndividualPost(req.params.slug)
     .then(function(post) {
       // console.log("this is the request slug", req.params.slug);
@@ -236,14 +239,19 @@ function getIndividualPostFromComment (postID) {
 
 app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
-  res.send(mustache.render(newCommentPage)); //has the submit form
+  let homePageusername = req.user.slug
+  res.send(mustache.render(newCommentPage, {
+    userRoute: homePageusername
+  })); //has the submit form
 });
 
 //--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
 app.get("/viewComment/:slug", ensureAuth, function(req, res) {
+  let homePageusername = req.user.slug
   viewIndividualComment(req.params.slug)
+
     .then(function(comment) {
       // console.log("this is the request slug", req.params.slug);
 
@@ -276,12 +284,16 @@ app.post("/comments/:slug", function(req, res) {
 //     RENDERING POSTS TO HOME PAGE      \\
 //--------------------------------------\\
 
-app.get("/home", function(req, res) {
-  getAllPosts(req.body).then(function(allPosts) {
-    // console.debug(allPosts);
+app.get("/home", ensureAuth, function(req, res) {
+  let homePageusername = req.user.slug
+
+  getAllPosts(req.body)
+  .then(function(allPosts) {
+    // console.debug(allPosts.user);
     res.send(
       mustache.render(homepageTemplate, {
-        PostsListHTML: renderAllPosts(allPosts.rows)
+        PostsListHTML: renderAllPosts(allPosts.rows),
+        userRoute: homePageusername
       })
     );
   });
@@ -387,7 +399,10 @@ function ensureAuth(req, res, next) {
 // add new Attagory
 
 app.get("/attagories/addNew", function(req, res) {
-  res.send(mustache.render(newAttagoryPage)); //has the submit form
+  let homePageusername = req.user.slug
+  res.send(mustache.render(newAttagoryPage, {
+    userRoute: homePageusername
+  })); //has the submit form
 });
 
 
@@ -411,6 +426,7 @@ app.post("/attagories/addNew", function(req, res) {
 
 
 app.get('/attagories/:slug', function(req, res) {
+  let homePageusername = req.user.slug  
   getAttagoryID(req.params.slug)
   .then(function(relevantAttagory) {
     console.log(relevantAttagory.rows[0].attagory_name, 'this is the attagory name')
@@ -418,7 +434,7 @@ app.get('/attagories/:slug', function(req, res) {
     getRelevantPosts(relevantAttagory.rows[0].id)
     .then(function(postsObject) {
       console.log(attagoryName)
-      res.send(mustache.render(ViewAttagoryPage, { attagoryName: attagoryName, allPostsHTML: renderAttagoryPosts(postsObject) }))
+      res.send(mustache.render(ViewAttagoryPage, { attagoryName: attagoryName, allPostsHTML: renderAttagoryPosts(postsObject), userRoute: homePageusername }))
       .then(function() {
         console.log('done')
       })
@@ -429,11 +445,13 @@ app.get('/attagories/:slug', function(req, res) {
 //view all attagories
 
 app.get("/attagories", function(req, res) {
+  let homePageusername = req.user.slug
   getAllAttagories()
   .then(function(attagoryList) {
     console.log(attagoryList.rows)
     res.send(mustache.render(allAttagoryPage, {
-      allAttagoryList: renderAllAttagories(attagoryList.rows)
+      allAttagoryList: renderAllAttagories(attagoryList.rows),
+      userRoute: homePageusername
     }))
     
   })
@@ -446,6 +464,7 @@ app.get("/attagories", function(req, res) {
 
 app.get('/users/:slug', function(req, res) {
   // console.log(req.params.slug)
+  let homePageusername = req.user.slug
   getUserInfoFromUserTable(req.params.slug)
   .then(function(userData) {
     console.log(userData.rows)
@@ -456,7 +475,8 @@ app.get('/users/:slug', function(req, res) {
       res.send(mustache.render(userProfilePage, {
         username: profileUsername,
         allPostsHTML: renderUserPosts(userJoinData.rows),
-        allCommentsHTML: renderUserComments(userJoinData.rows)
+        allCommentsHTML: renderUserComments(userJoinData.rows),
+        userRoute: homePageusername
       }))
     })
 

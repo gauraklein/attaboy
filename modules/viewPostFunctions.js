@@ -57,7 +57,7 @@ function viewIndividualPost (slug) {
 
 
 function renderSinglePost (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
+  // console.log('I am rendering this post', postFromDb.title)
    return `
     <div class="card border cardFix border-secondary">
   <div class="card-body border border-primary">

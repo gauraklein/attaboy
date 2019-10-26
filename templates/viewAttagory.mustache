@@ -17,7 +17,6 @@
 </head>
 
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="/home">Attaboy!</a>
       <button
@@ -42,7 +41,7 @@
             <a class="nav-link" href="/attagories">Attagories</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">My Profile</a>
+            <a class="nav-link" href="/users/{{{userRoute}}}">My Profile</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/logout">Logout</a>
@@ -50,7 +49,6 @@
         </ul>
       </div>
     </nav>
-
 
   <h1>{{{attagoryName}}}</h1>
   <main>{{{allPostsHTML}}}</main>
