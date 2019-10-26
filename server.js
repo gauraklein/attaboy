@@ -455,7 +455,8 @@ app.get('/users/:slug', function(req, res) {
       console.log(userJoinData.rows)
       res.send(mustache.render(userProfilePage, {
         username: profileUsername,
-        allPostsHTML: renderUserPosts(userJoinData.rows)
+        allPostsHTML: renderUserPosts(userJoinData.rows),
+        allCommentsHTML: renderUserComments(userJoinData.rows)
       }))
     })
 
@@ -466,6 +467,24 @@ app.get('/users/:slug', function(req, res) {
 
 function renderUserPosts (userPostArray) {
   return '<ul>' + userPostArray.map(renderIndividualUserPost).join('') + '</ul>'
+}
+
+function renderUserComments (userPostArray) {
+  return '<ul>' + userPostArray.map(renderIndividualUserComments).join('') + '</ul>'
+}
+
+function renderIndividualUserComments (postFromDb) {
+  console.log('I am rendering this comment', postFromDb.comment_id)
+   return `
+    <div class="card border cardFix border-secondary">
+  <div class="card-body border border-primary">
+    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.post_title}</h2></a>
+    <p class="card-text"><strong>Comment:&nbsp;</strong>${postFromDb.comment_content}</p>
+    
+  </div>
+</div>
+
+    `
 }
 
 function renderIndividualUserPost (postFromDb) {
@@ -490,6 +509,7 @@ function getAllUserInfo () {
 	posts.title AS post_title,
 	posts.id AS post_id,
 	posts.post_slug,
+	comments.id AS comment_id,
 	comments.content AS comment_content
 	 FROM users
 	 	JOIN posts ON posts.post_author = users.id
