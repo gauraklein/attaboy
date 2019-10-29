@@ -246,11 +246,7 @@ app.get("/home", function(req, res) {
     );
   }).catch(function(err){
     console.log(err)
-<<<<<<< HEAD
-    res.send('something went wrong')
-=======
     res.send("something went wrong")
->>>>>>> f495df7a4bc97f233c2a8a9d3164088a8b60b2ea
   });
 });
 
