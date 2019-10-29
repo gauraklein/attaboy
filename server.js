@@ -26,18 +26,18 @@ passport.use(
         if (!user) {
           console.log("User not found");
           done(null, false);
-        }
-
+        } 
+        
         if (bcrypt.compareSync(user.password, password)) {
           console.log("Wrong Password");
           done(null, false);
-        }
+        } else
         console.log("User found");
         return done(null, user);
       })
       .catch(err => {
         console.error("Local strategy error - ", err);
-        done(err);
+        return err;
       });
   })
 );
@@ -228,12 +228,15 @@ app.post("/comments/:slug", function(req, res) {
 
 app.get("/home", function(req, res) {
   getAllPosts(req.body).then(function(allPosts) {
-    // console.debug(allPosts);
+    console.log('get all posts is running)')
     res.send(
       mustache.render(homepageTemplate, {
         PostsListHTML: renderAllPosts(allPosts.rows)
       })
     );
+  }).catch(function(err){
+    console.log(err)
+    res.send('something went wrong')
   });
 });
 

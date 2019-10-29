@@ -19,6 +19,7 @@ function renderComment (commentFromDb) {
     `
 }
 function getAllComments() {
+  console.log('get all comments running')
   return db.raw(getAllCommentsQuery);
 }
 
@@ -34,6 +35,6 @@ function renderAllComments(allComments) {
       viewIndividualComment: viewIndividualComment,
       renderComment: renderComment,
       renderAllComments: renderAllComments,
-      getAllComments:getAllComments
+      getAllComments: getAllComments
 
   }

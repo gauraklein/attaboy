@@ -60,7 +60,7 @@ function renderAllPosts(allPosts) {
       renderSinglePost: renderSinglePost,
       prettyPrintJSON: prettyPrintJSON,
       renderAllPosts: renderAllPosts,
-      getAllPosts:getAllPosts
+      getAllPosts: getAllPosts
 
   }
 
