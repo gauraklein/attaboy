@@ -12,45 +12,65 @@ attagories.attagory_name
   FROM users
     Join posts ON posts.post_author = users.id
     Join attagories on attagories.id = posts.attagory_id;
+    
 `;
 
+function viewIndividualPost(slug) {
+  return db.raw("SELECT * FROM posts WHERE post_slug = ?", [slug]);
+}
 
-function viewIndividualPost (slug) {
-    return db.raw('SELECT * FROM posts WHERE post_slug = ?', [slug])
-  }
-
-function renderListPosts (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
-   return `
+function renderListPosts(postFromDb) {
+  console.log("I am rendering this post", postFromDb.title);
+  return `
     <a href="/viewpost/${postFromDb.slug}"><h1>${postFromDb.title}</h1></a>
     <h4>${postFromDb.content}</h4>
     <p>posted by: ${postFromDb.post_author}</p>
     <p>total attaboys: ${postFromDb.post_attaboys}</p>
-    `
+    `;
 }
 
-function renderSinglePost (postFromDb) {
-  console.log('I am rendering this post', postFromDb.title)
-   return `
+function renderSinglePost(postFromDb, comments) {
+  // var commentsHTML = comments.map((comment) => {
+  //   return `<div>${comment.content}</div>`;
+  // });
+  var commentsHTML = ["todo add comments"];
+
+  console.log("I am rendering this post", postFromDb.postid);
+  return `
     <div class="card border border-secondary">
-  <div class="card-body border border-primary">
-    <a href="/viewpost/${postFromDb.post_slug}"><h2>${postFromDb.title}</h2></a>
-    <p class="card-text">${postFromDb.content}</p>
-    <footer class="blockquote-footer">posted by: ${postFromDb.username} <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
-    <button>Comment</button>
+      <div class="card-body border border-primary">
+          <a href="/viewpost/${postFromDb.post_slug}">
+            <h2>${postFromDb.title}</h2>
+          </a>
+          <p class="card-text">${postFromDb.content}</p>
+          <footer class="blockquote-footer">posted by: ${
+            postFromDb.username
+          } <cite>total attaboys: ${postFromDb.total_attaboys}</cite></footer>
+
+          <hr>
+          <h3>Comments</h3>
+            ${commentsHTML.join("")}
+          <hr>
+          <form action="/newComment" method="post">
+            <label>Comment:</label>
+            <input type="text" name="content" />
+            <input type="hidden" name="postid" value="${postFromDb.postid}">
+            <button type="submit">Submit</button>
+          </form>
   </div>
 </div>
 
-    `
+    `;
 }
 function getAllPosts() {
   return db.raw(getAllPostsQuery);
 }
 
 function renderAllPosts(allPosts) {
-  return '<form action="/posts/:slug" method ="posts"> <ul>' + allPosts.map(renderSinglePost).join('') + '</ul></form>'
+  return "<ul>" + allPosts.map(renderSinglePost).join("") + "</ul>";
 }
 
+<<<<<<< HEAD
   function prettyPrintJSON (x) {
     return JSON.stringify(x, null, 2)
   } 
@@ -63,6 +83,18 @@ function renderAllPosts(allPosts) {
       getAllPosts: getAllPosts
 
   }
+=======
+function prettyPrintJSON(x) {
+  return JSON.stringify(x, null, 2);
+}
+>>>>>>> f495df7a4bc97f233c2a8a9d3164088a8b60b2ea
 
+module.exports = {
+  viewIndividualPost: viewIndividualPost,
+  renderSinglePost: renderSinglePost,
+  prettyPrintJSON: prettyPrintJSON,
+  renderAllPosts: renderAllPosts,
+  getAllPosts: getAllPosts
+};
 
-  // view individual post query
+// view individual post query

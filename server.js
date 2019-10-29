@@ -69,7 +69,14 @@ passport.deserializeUser(function(id, done) {
 //Modules
 const log = require("./modules/logging.js");
 const mustache = require("mustache");
+const { NewCommentToDB } = require("./modules/newCommentFunctions.js");
 const { newPostToDB } = require("./modules/newPostFunctions.js");
+const {
+  viewIndividualComment,
+      renderComment,
+      renderAllComments,
+      getAllComments
+} = require("./modules/viewCommentFunctions");
 const {
   viewIndividualPost,
   renderSinglePost,
@@ -87,7 +94,7 @@ const { addUser } = require("./modules/authentication/newUser.js");
 const uuidv1 = require("uuidv1");
 
 //Templating
-
+const newCommentPage = fs.readFileSync("./templates/newComment.mustache", "utf8");
 const newPostPage = fs.readFileSync("./templates/newPost.mustache", "utf8");
 const viewPostTemplate = fs.readFileSync(
   "./templates/viewPost.mustache",
@@ -101,10 +108,8 @@ const ViewAttagoryPage = fs.readFileSync(
   "./templates/viewAttagory.mustache",
   "utf8"
 );
-const homepageTemplate = fs.readFileSync(
-  "./templates/homepage.mustache",
-  "utf8"
-);
+const viewCommentTemplate = fs.readFileSync("./templates/ViewComment.mustache", "utf8");
+const homepageTemplate = fs.readFileSync("./templates/homepage.mustache", "utf8");
 
 //--------------------------------------\\
 //           NEW POST ROUTES            \\
@@ -140,9 +145,12 @@ app.get("/viewpost/:slug", function(req, res) {
   // console.log(req.params.slug);
   viewIndividualPost(req.params.slug)
     .then(function(post) {
-      // console.log("this is the request slug", req.params.slug);
-      // console.log(post);
-      res.send(renderSinglePost(post.rows[0]));
+      var postid = post.rows[0].id;
+      getCommentsByPost(postid)
+        .then(function(data) {
+          var comments = data.rows;
+          res.send(renderSinglePost(post.rows[0], comments));
+        })
     })
     .catch(function(err) {
       // console.error(err);
@@ -173,10 +181,11 @@ app.get("/viewpost/:slug", function(req, res) {
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
+  console.log('this is the req', req.body)
   NewCommentToDB(req)
     .then(function() {
       res.send(
-        `<h1>Comment sent! Click <a href="/newComment">here</a> to submit another!</h1>`
+        `<h1>Comment sent! Click <a href="/home">here</a> to go back!</h1>`
       );
     })
     .catch(function(err) {
@@ -189,18 +198,19 @@ app.get("/newComment", ensureAuth, function(req, res) {
   console.log(req.user);
   res.send(mustache.render(newCommentPage)); //has the submit form
 });
+
 //--------------------------------------\\
 //        VIEW COMMENT ROUTS            \\
 //--------------------------------------\\
 app.get("/viewComment/:slug", ensureAuth, function(req, res) {
   viewIndividualComment(req.params.slug)
     .then(function(comment) {
-      console.log("this is the request slug", req.params.slug);
+      // console.log("this is the request slug", req.params.slug);
 
       res.send(renderComment(comment.rows[0]));
     })
     .catch(function(err) {
-      console.error(err);
+      // console.error(err);
       res.status(404).send("  ");
     });
 });
@@ -236,9 +246,26 @@ app.get("/home", function(req, res) {
     );
   }).catch(function(err){
     console.log(err)
+<<<<<<< HEAD
     res.send('something went wrong')
+=======
+    res.send("something went wrong")
+>>>>>>> f495df7a4bc97f233c2a8a9d3164088a8b60b2ea
   });
 });
+
+
+app.get("/Commenthome", function(req, res) {
+  getAllComments(req.body).then(function(allcomments) {
+    // console.debug(allPosts);
+    res.send(
+      mustache.render(viewCommentTemplate , {
+        CommentListHTML: renderAllComments(allcomments.rows)
+      })
+    );
+  });
+});
+
 
 //--------------------------------------\\
 //            NEW USER ROUTES           \\
@@ -303,7 +330,7 @@ app.post("/login", (req, res, next) => {
 
 app.get("/logout", function(req, res) {
   req.logout();
-  res.redirect("/home");
+  res.redirect("/login");
 });
 
 app.get("/success", (req, res) =>
@@ -368,3 +395,7 @@ app.get("/attagories/:slug", function(req, res) {
 app.listen(port, () => {
   log.info("Listening on port " + port + " 🎉🎉🎉");
 });
+
+function getCommentsByPost(postid) {
+  return db.raw('SELECT * FROM comments WHERE post_id = ?', [postid])
+}

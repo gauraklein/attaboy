@@ -1,7 +1,9 @@
-
+const { db } = require("./db/dbConnection");
 const getAllCommentsQuery = `
-  SELECT *
-  FROM Comments
+SELECT*
+From
+comments
+
 `;
 
 function viewIndividualComment (slug) {
@@ -14,10 +16,11 @@ function renderComment (commentFromDb) {
     <p>${commentFromDb.content}</p>
     <p>posted by: ${commentFromDb.post_author}</p>
     <p>total attaboys: ${commentFromDb.post_attaboys}</p>
-    <button>comment${commentFromDb.body.content}</button>
+    
     
     `
 }
+//<button>comment${commentFromDb.body.content}</button>
 function getAllComments() {
   console.log('get all comments running')
   return db.raw(getAllCommentsQuery);
