@@ -70,24 +70,9 @@ function renderAllPosts(allPosts) {
   return "<ul>" + allPosts.map(renderSinglePost).join("") + "</ul>";
 }
 
-<<<<<<< HEAD
-  function prettyPrintJSON (x) {
-    return JSON.stringify(x, null, 2)
-  } 
-
-  module.exports = {
-      viewIndividualPost: viewIndividualPost,
-      renderSinglePost: renderSinglePost,
-      prettyPrintJSON: prettyPrintJSON,
-      renderAllPosts: renderAllPosts,
-      getAllPosts: getAllPosts
-
-  }
-=======
 function prettyPrintJSON(x) {
   return JSON.stringify(x, null, 2);
 }
->>>>>>> f495df7a4bc97f233c2a8a9d3164088a8b60b2ea
 
 module.exports = {
   viewIndividualPost: viewIndividualPost,
