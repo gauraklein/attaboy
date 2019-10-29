@@ -244,8 +244,13 @@ app.get("/home", function(req, res) {
         PostsListHTML: renderAllPosts(allPosts.rows)
       })
     );
+  }).catch(function(err){
+    console.log(err)
+    res.send("something went wrong")
   });
 });
+
+
 app.get("/Commenthome", function(req, res) {
   getAllComments(req.body).then(function(allcomments) {
     // console.debug(allPosts);
