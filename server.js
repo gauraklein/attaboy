@@ -212,8 +212,9 @@ app.get("/viewpost/:slug", function(req, res) {
 //--------------------------------------\\
 
 app.post("/newComment", ensureAuth, (req, res, next) => {
-  console.log('this is the req', req.body.postID)
-  let commentPostID = req.body.postID
+  console.log('this is the req', req.body.postid)
+  console.log('this is the req', req.body)
+  let commentPostID = req.body.postid
   NewCommentToDB(req)
     .then(function(comment) {
       getIndividualPostFromComment(commentPostID)
@@ -232,11 +233,11 @@ app.post("/newComment", ensureAuth, (req, res, next) => {
     });
 });
 
-function getIndividualPostFromComment (postID) {
+function getIndividualPostFromComment (postid) {
 
   return db.raw(`SELECT *
           FROM posts
-              WHERE id =?`, [postID])
+              WHERE id =?`, [postid])
 
 }
 
@@ -299,6 +300,9 @@ app.get("/home", ensureAuth, function(req, res) {
         userRoute: homePageusername
       })
     );
+  }).catch(function(err){
+    console.log(err)
+    res.send("something went wrong")
   });
 });
 
