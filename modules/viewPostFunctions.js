@@ -2,17 +2,18 @@ const { db } = require("./db/dbConnection");
 
 const getAllPostsQuery = `
 SELECT
-posts.id AS postID,
-posts.post_slug,
-posts.title,
-posts.content,
-posts.post_attaboys AS total_Attaboys,
-users.username,
-attagories.attagory_name
-  FROM users
-    Join posts ON posts.post_author = users.id
-    Join attagories on attagories.id = posts.attagory_id;
-    
+	posts.id AS postID,
+	posts.post_slug,
+	posts.title,
+	posts.content,
+	posts.post_attaboys AS total_Attaboys,
+	users.username,
+	users.slug AS user_slug,
+	attagories.attagory_name,
+	attagories.slug AS attagory_slug
+		FROM users
+			Join posts ON posts.post_author = users.id
+			Join attagories on attagories.id = posts.attagory_id;
 `;
 
 function viewIndividualPost(slug) {
@@ -57,11 +58,39 @@ function renderSinglePost(postFromDb, comments) {
             <input type="hidden" name="postid" value="${postFromDb.postid}">
             <button type="submit">Submit</button>
           </form>
-  </div>
-</div>
+          </div>
+          </div> `
+          
+  }
 
-    `;
-}
+  
+             
+
+  function viewIndividualPostByID (postID) {
+    console.log('this is the individual post function', postID)
+    return db.raw(`SELECT
+    posts.id AS postID,
+    posts.post_slug,
+    posts.title,
+    posts.content,
+    posts.post_attaboys AS total_attaboys,
+    users.username,
+    users.slug AS user_slug,
+    attagories.attagory_name,
+    attagories.slug AS attagory_slug
+      FROM users
+        Join posts ON posts.post_author = users.id
+        Join attagories on attagories.id = posts.attagory_id`)
+
+  }
+
+
+
+
+
+
+    
+
 function getAllPosts() {
   return db.raw(getAllPostsQuery);
 }
