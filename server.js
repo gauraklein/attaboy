@@ -203,7 +203,12 @@ app.get("/viewpost/:slug", ensureAuth, function(req, res) {
             // console.log(data.rows, 'these are the comments')
             console.log(postData, 'this is the post object')
             var comments = data.rows;
-            res.send(renderSinglePost(postData, comments));
+            res.send(mustache.render(viewPostTemplate, {
+              individualPost: renderSinglePost(postData, comments),
+              userRoute: homePageusername
+
+
+            }));
           })
       
     })
@@ -313,18 +318,12 @@ app.post("/comments/:slug", function(req, res) {
 //     RENDERING POSTS TO HOME PAGE      \\
 //--------------------------------------\\
 
-<<<<<<< HEAD
 app.get("/home", ensureAuth, function(req, res) {
   let homePageusername = req.user.slug
 
   getAllPosts(req.body)
   .then(function(allPosts) {
     // console.debug(allPosts.user);
-=======
-app.get("/home", function(req, res) {
-  getAllPosts(req.body).then(function(allPosts) {
-    console.log('get all posts is running)')
->>>>>>> authentication
     res.send(
       mustache.render(homepageTemplate, {
         PostsListHTML: renderAllPosts(allPosts.rows),
