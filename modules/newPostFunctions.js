@@ -2,19 +2,17 @@ const { db } = require("./db/dbConnection");
 const uuidv1 = require('uuidv1')
 
 
-
+let postID = 200 /// deals with id not incrementing issue
 function newPostToDB(post) {
   
-  console.log(post.body)
+  console.log(post.user)
   slug = uuidv1();
-  return db.raw("INSERT INTO posts (attagory_id, post_author, title, content, post_attaboys, total_comments, post_slug) VALUES (?, ?, ?, ?, ?, ?, ?)", [
+  return db.raw("INSERT INTO posts (attagory_id, post_author, title, content, slug) VALUES (?, ?, ?, ?, ?)", [
     
-    post.body.attagories,
+    post.params.attagory,
     post.user.id,
     post.body.title,
     post.body.content,
-    0,
-    0,
     slug
   ]);
 }

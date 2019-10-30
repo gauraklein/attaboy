@@ -41,18 +41,16 @@
             <a class="nav-link" href="/attagories">Attagories</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/users/{{{userRoute}}}">My Profile</a>
+            <a class="nav-link" href="#">My Profile</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
+          <li class="nav-item">Logout</a>
           </li>
         </ul>
       </div>
     </nav>
-
     <h1>Sign up for your Attaboy Account!</h1>
     <div class="d-flex d-flex justify-content-center vh-100">
-      
+      <div id="form_container">
         <form id="sign_up_form" action="/signup" method="post">
           <div>
             <label>Username:</label>
@@ -73,7 +71,7 @@
             <input type="submit" value="Submit" />
           </div>
         </form>
-      
+      </div>
     </div>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
