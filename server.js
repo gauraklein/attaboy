@@ -188,17 +188,24 @@ app.get("/:attagory/newpost", ensureAuth, function(req, res) {
 //          VIEW POST ROUTES            \\
 //--------------------------------------\\
 
-app.get("/viewpost/:slug", function(req, res) {
+app.get("/viewpost/:slug", ensureAuth, function(req, res) {
   // console.log(req.params.slug);
   let homePageusername = req.user.slug
-  viewIndividualPost(req.params.slug)
-    .then(function(post) {
-      var postid = post.rows[0].id;
-      getCommentsByPost(postid)
-        .then(function(data) {
-          var comments = data.rows;
-          res.send(renderSinglePost(post.rows[0], comments));
-        })
+  // console.log(req.params.slug, 'this is the post slug')
+  viewIndividualPostByID(req.params.slug)
+    .then(function(allPostData) {
+      let postid = allPostData.rows[0].postid;
+      let postData = allPostData.rows[0];
+      console.log(postData)
+        // console.log(post.rows, 'this is the post object')
+        getCommentsByPost(postid)
+          .then(function(data) {
+            // console.log(data.rows, 'these are the comments')
+            console.log(postData, 'this is the post object')
+            var comments = data.rows;
+            res.send(renderSinglePost(postData, comments));
+          })
+      
     })
     .catch(function(err) {
       // console.error(err);
@@ -206,6 +213,24 @@ app.get("/viewpost/:slug", function(req, res) {
     });
 });
 
+const getAllPostsForSinglePostQuery = `
+SELECT
+	posts.id AS postID,
+	posts.post_slug,
+	posts.title,
+	posts.content,
+	posts.post_attaboys AS total_Attaboys,
+	users.username,
+	users.slug AS user_slug,
+	attagories.attagory_name,
+	attagories.slug AS attagory_slug
+		FROM users
+			Join posts ON posts.post_author = users.id
+			Join attagories on attagories.id = posts.attagory_id;
+`;
+function getCommentsByPost(postid) {
+  return db.raw('SELECT * FROM comments WHERE post_id = ?', [postid])
+}
 
 //--------------------------------------\\
 //        NEW COMMENT ROUTES             \\
@@ -250,7 +275,7 @@ app.get("/newComment", ensureAuth, function(req, res) {
 });
 
 //--------------------------------------\\
-//        VIEW COMMENT ROUTS            \\
+//        VIEW COMMENT ROUTES            \\
 //--------------------------------------\\
 app.get("/viewComment/:slug", ensureAuth, function(req, res) {
   let homePageusername = req.user.slug
@@ -568,6 +593,3 @@ app.listen(port, () => {
   log.info("Listening on port " + port + " 🎉🎉🎉");
 });
 
-function getCommentsByPost(postid) {
-  return db.raw('SELECT * FROM comments WHERE post_id = ?', [postid])
-}
