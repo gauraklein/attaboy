@@ -86,18 +86,18 @@ passport.use(
         if (!user) {
           console.log("User not found");
           done(null, false);
-        }
-
+        } 
+        
         if (bcrypt.compareSync(user.password, password)) {
           console.log("Wrong Password");
           done(null, false);
-        }
+        } else
         console.log("User found");
         return done(null, user);
       })
       .catch(err => {
         console.error("Local strategy error - ", err);
-        done(err);
+        return err;
       });
   })
 );
@@ -313,12 +313,18 @@ app.post("/comments/:slug", function(req, res) {
 //     RENDERING POSTS TO HOME PAGE      \\
 //--------------------------------------\\
 
+<<<<<<< HEAD
 app.get("/home", ensureAuth, function(req, res) {
   let homePageusername = req.user.slug
 
   getAllPosts(req.body)
   .then(function(allPosts) {
     // console.debug(allPosts.user);
+=======
+app.get("/home", function(req, res) {
+  getAllPosts(req.body).then(function(allPosts) {
+    console.log('get all posts is running)')
+>>>>>>> authentication
     res.send(
       mustache.render(homepageTemplate, {
         PostsListHTML: renderAllPosts(allPosts.rows),
